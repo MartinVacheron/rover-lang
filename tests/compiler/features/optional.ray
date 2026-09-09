@@ -1,5 +1,5 @@
 fn main() {
-    var a: ?int = 1
+    a: ?int = 1
 
     if a == null {
         print "oui"

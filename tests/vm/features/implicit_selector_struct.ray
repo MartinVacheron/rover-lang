@@ -17,17 +17,17 @@ fn printFoo(foo: Foo) {
 }
 
 fn main() {
-    var foo: Foo = .{a: 1, c: "yes"}
+    foo: Foo = .{a=1, c="yes"}
     printFoo(foo)
-    foo = .{a: 2, c: "no"}
+    foo = .{a=2, c="no"}
     printFoo(foo)
 
-    printFoo(.{ a: 3, c: "Tom" })
-    printFoo(foo: .{ a: 4, c: "Manon" })
+    printFoo(.{ a=3, c="Tom" })
+    printFoo(foo=.{ a=4, c="Manon" })
     
-    let line: Line = .{
-        a: .{ x: 1, y: 2 },
-        b: .{ x: 3, y: 4 },
+    line: Line = .{
+        a=.{ x=1, y=2 },
+        b=.{ x=3, y=4 },
     }
     print line.a.x
     print line.a.y

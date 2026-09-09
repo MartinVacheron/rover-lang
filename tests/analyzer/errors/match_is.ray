@@ -1,5 +1,5 @@
 fn main() {
-    var a: int|float = 8.3
+    a: int|float = 8.3
     match a is {
         int => 1
         bool => 2
@@ -11,22 +11,22 @@ fn main() {
         int => 2
     }
 
-    let nonUnion = true
+    nonUnion := true
     match nonUnion is {
         
     }
 
-    let b = match a is {
+    b := match a is {
         int => 5
         float => print "float"
     }
 
-    let c: bool = match a is {
+    c: bool = match a is {
         int => 5
         float => true
     }
 
-    let d: bool|str = match a is {
+    d: bool|str = match a is {
         int => 5
         float => true
     }

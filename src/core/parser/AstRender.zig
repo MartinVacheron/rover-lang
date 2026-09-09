@@ -655,8 +655,7 @@ fn pattern(self: *Self, pat: Ast.Pattern, comma: bool) !void {
         .nullable => |v| {
             try self.openKey("pattern: nullable", .block);
             try self.pushKeyValue("binding", self.ast.toSource(v.binding), true);
-            try self.renderSingleExpr("expr", v.expr, .block, true);
-            try self.pushKeyValue("constant", if (self.ast.token_tags[v.token] == .let) "true" else "false", false);
+            try self.renderSingleExpr("expr", v.expr, .block, false);
         },
     }
 

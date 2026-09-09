@@ -1,15 +1,15 @@
 // Invalid assigned type
-var a: int = 7.5
-var b: float = "foo"
-var c: bool = 8
+a: int = 7.5
+b: float = "foo"
+c: bool = 8
 
 // Unknown type
-var a: floa = 7.5
-var b: Int = 4
-var c: House
+a: floa = 7.5
+b: Int = 4
+c: House
 
 // Already declared
-var declared: int
-var declared: float
+declared: int
+declared: float
 
 fn main() {}

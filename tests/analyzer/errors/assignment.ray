@@ -13,14 +13,14 @@ fn main() {
     add = 1
     add(5) = 1
 
-    var noval: int
+    noval: int
     noval = 1.4
 
-    let cte = 5
+    cte :: 5
     cte = 7
 
     // Assign to method
-    var foo = Foo{ a: 5 }
+    foo := Foo{ a=5 }
 
     fn f2(this: Foo, a: int) {
         print 2 * a
@@ -28,6 +28,6 @@ fn main() {
 
     foo.f = f2
 
-    let constFoo = Foo{ a: 5 }
+    constFoo :: Foo{ a=5 }
     constFoo.a = 1
 }

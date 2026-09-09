@@ -13,9 +13,9 @@ enum Foo {
 }
 
 fn main() {
-    let foo: Foo = .b
+    foo: Foo = .b
     foo.speak()
 
-    let bar: Bar = foo
+    bar: Bar = foo
     bar.speak()
 }

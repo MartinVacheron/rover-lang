@@ -7,12 +7,12 @@ fn add1() -> int {
 }
 
 fn add2() -> int {
-    var trash = if true do return 1 else 5
+    trash := if true do return 1 else 5
     return trash
 }
 
 fn add3() -> int {
-    var trash = if true do 1 else return 5
+    trash := if true do 1 else return 5
     return trash
 }
 

@@ -1,7 +1,7 @@
 fn main() {
-    let i = 1
-    let f = 2.
-    let s = "foo"
+    i := 1
+    f := 2.
+    s := "foo"
 
     _ = i + -i
     _ = f + -f
@@ -29,8 +29,8 @@ fn main() {
     i % i
     f % f
 
-    let a = 1
-    let b = 2
+    a := 1
+    b := 2
     *a == *b
     *a != *b
 

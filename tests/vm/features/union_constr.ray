@@ -14,7 +14,7 @@ union Foo {
 }
 
 fn main() {
-    var foo = Foo.a(5)
+    foo := Foo.a(5)
     print foo
     print foo.a
     foo = Foo.b(1.2)

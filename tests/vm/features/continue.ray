@@ -15,7 +15,7 @@ fn main() {
     }
     print "----"
 
-    let a = 1
+    a := 1
     outer: for i in 0..3 {
         inner: for j in 3..6 {
             print j
@@ -35,7 +35,7 @@ fn main() {
     print "----"
 
     // While
-    var i = 0
+    i := 0
     loop: while i < 4 {
         print i
         i += 1

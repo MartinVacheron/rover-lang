@@ -1,7 +1,7 @@
 fn getValue() -> int { return 5 }
 
 fn main() {
-    let value = 2
+    value := 2
 
     print match value {
         0 => 10
@@ -53,7 +53,7 @@ fn main() {
     }
 
     // float
-    let fvalue = 2.5
+    fvalue := 2.5
 
     match fvalue {
         1.2..4.5 => {}

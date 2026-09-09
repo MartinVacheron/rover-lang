@@ -1,5 +1,5 @@
 use data.math
-let globValue = 1
+globValue := 1
 use data.math.{name}
 
 fn main() {

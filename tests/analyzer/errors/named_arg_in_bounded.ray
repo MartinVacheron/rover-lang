@@ -1,10 +1,10 @@
 struct Foo {
-    fn method(self, a=1) { }
+    fn method(self, a := 1) { }
 }
 
 fn main() {
-    var foo = Foo{}
-    var bound = foo.method
-    bound(a: 2)
+    foo := Foo{}
+    bound := foo.method
+    bound(a=2)
 }
 

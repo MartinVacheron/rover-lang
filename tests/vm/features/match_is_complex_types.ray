@@ -18,7 +18,7 @@ fn matchAny(f: Foo|int|[]float|[]str) {
 }
 
 fn main() {
-    var f: Foo|int|[]str|[]float = Foo.a
+    f: Foo|int|[]str|[]float = Foo.a
     matchAny(f)
     f = .b
     matchAny(f)

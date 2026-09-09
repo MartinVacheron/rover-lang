@@ -11,22 +11,22 @@ fn call(func: fn(int, bool) -> int, arg1: int, arg2: bool) -> int {
 }
 
 fn main() {
-    var f = add
-    var name = "theprimeagen"
+    f := add
+    name := "theprimeagen"
     print name // expect: "theprimeagen"
 
     print f(4, -9) // expect: -5
 
     // local function
-    var arg1 = 9
+    arg1 := 9
 
     fn sub(a: int, b: int) -> int {
         return a - b
     }
 
-    var f2 = sub
+    f2 := sub
     print name // expect: "theprimeagen"
-    var arg2 = 2
+    arg2 := 2
 
     print f2(arg1, arg2) // expect: 6.5
 

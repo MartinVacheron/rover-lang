@@ -8,7 +8,7 @@ struct DoubleField {
 
 fn main() {
     {
-        var loc1 = "local"
-        var loc1 = " var"
+        loc1 := "local"
+        loc1 := " var"
     }
 }

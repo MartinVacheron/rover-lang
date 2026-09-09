@@ -1,18 +1,18 @@
-var glob = 1
-var period = "."
-var loc2 = "sneaky"
+glob := 1
+period := "."
+loc2 := "sneaky"
 
 fn main() {
     {
-        var loc1 = 1.5
-        var loc2 = 5
-        var _loc3 = -.5
+        loc1 := 1.5
+        loc2 := 5
+        _loc3 := -.5
 
         print _loc3 + loc1
 
         {
-            var loc1 = 6.
-            var loc2 = 1.5
+            loc1 := 6.
+            loc2 := 1.5
 
             print loc2 + loc1
             print loc1 + _loc3
@@ -22,14 +22,14 @@ fn main() {
     }
 
     {
-        var loc1 = "local"
-        var loc2 = " var"
+        loc1 := "local"
+        loc2 := " var"
 
         print loc1 + loc2 + period
 
         loc2 = "assign local"
         {
-            var loc2 = "sublocal"
+            loc2 := "sublocal"
             loc2 = "assign sub"
         }
         loc2 = loc1

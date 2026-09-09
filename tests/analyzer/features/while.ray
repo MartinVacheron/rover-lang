@@ -1,18 +1,18 @@
 fn main() {
-    var i = 0
+    i := 0
     while i < 10 {
         i += 1
     }
 
     while true {
-        let a = 1
+        a := 1
         break
     }
 
     b: {
-        let a = 1
+        a := 1
         while true {
-            let b = 1
+            b := 1
             break :b
         }
     }

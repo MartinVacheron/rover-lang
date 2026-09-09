@@ -44,6 +44,6 @@ fn main() {
     print Bar.withDefaultNoBody()
     print Baz.withDefaultNoBody(5)
 
-    let bar = Bar{}
+    bar := Bar{}
     bar.method1()
 }

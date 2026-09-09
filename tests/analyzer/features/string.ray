@@ -1,4 +1,4 @@
 fn main() {
-    let name = "Tom"
+    name := "Tom"
     print name[1]
 }

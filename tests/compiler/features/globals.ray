@@ -1,5 +1,5 @@
-var number = 15.6
-var name = "Blender"
+number := 15.6
+name := "Blender"
 
 fn main() {
     number = 90.

@@ -3,7 +3,7 @@ fn main() {
         print a
     }
 
-    let arr = [5, 6, 7, 8]
+    arr := [5, 6, 7, 8]
     for a in arr {
         print a
     }
@@ -21,7 +21,7 @@ fn main() {
         print c
     }
 
-    let string = "Tom"
+    string := "Tom"
     for c in string {
         print c
     }
@@ -53,7 +53,7 @@ fn main() {
     }
     print "----"
 
-    let a = 6
+    a := 6
 
     for i in 0..a {
         print i

@@ -1,30 +1,30 @@
-var glob1 = 7.5
-var glob2 = 42.5
+glob1 := 7.5
+glob2 := 42.5
 
 fn main() {
     // Last expression returned while discarding inbetween locals
-    var a: int = {
-        var space = 67
-        var nb = 7
-        var sneaky = 90
+    a: int = {
+        space := 67
+        nb := 7
+        sneaky := 90
         break nb
     }
 
     print a // expect: 7
 
     // Returning an outter local from a scope
-    var b = 56
+    b := 56
 
-    var c: int = {
-        var sneaky = 90
+    c: int = {
+        sneaky := 90
         break b
     }
 
     print c // expect: 56
 
     {
-        var tmp = 67
-        var b = 87. - 6.
+        tmp := 67
+        b := 87. - 6.
         print b // expect: 81
     }
 
@@ -35,7 +35,7 @@ fn main() {
     }
 
     // Returning a global
-    var scope = {
+    scope := {
         print "in scope" // expect: "in scope"
         break glob1
     }
@@ -45,7 +45,7 @@ fn main() {
     // Breaks only inner scope
     {
         {
-            var a = 1
+            a := 1
             break
             print "ayo"
         }

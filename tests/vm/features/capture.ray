@@ -1,5 +1,5 @@
 fn outer() {
-    var x = "outside"
+    x := "outside"
 
     fn inner() {
         print x
@@ -9,7 +9,7 @@ fn outer() {
 }
 
 fn main() {
-    var a = 1
+    a := 1
 
     fn capture() { print a }
 

@@ -11,8 +11,8 @@ match getValue() @v {
 match value is {
     int => 5
     float => {
-        let a = 1
-        let b = 2
+        a := 1
+        b := 2
         break a = b
     }
     else => 10

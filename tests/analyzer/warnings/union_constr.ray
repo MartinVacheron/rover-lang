@@ -5,6 +5,6 @@ union Foo {
 }
 
 fn main() {
-    var foo = Foo.c()
+    foo := Foo.c()
 }
 

@@ -29,10 +29,10 @@ fn main() {
     Bar.speak()
     Baz.speak()
 
-    let bar = Bar{}
+    bar := Bar{}
     bar.method1()
 
-    let baz = Baz{}
+    baz := Baz{}
     baz.method1()
 }
 

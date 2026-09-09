@@ -9,7 +9,7 @@ fn printData(data: Data) {
 
 fn main() {
     // Static functions
-    var data = Data.newDefault()
+    data := Data.newDefault()
     printData(data)
 
     data = Data.new(2, 11.22, false, "Tom")

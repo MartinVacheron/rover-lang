@@ -1,0 +1,2 @@
+non_comptime_constant
+call_method_on_constant, foo

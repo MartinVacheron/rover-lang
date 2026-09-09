@@ -1,10 +1,10 @@
 fn main() {
     _ = if {
-        var tmp = 62
+        tmp := 62
         break tmp
     } do 1.5 else 4.
 
-    var res = if true {break 1}
-    var res2 = if true do -5.5
-    var res3 = if true {1} else {"pipou"}
+    res := if true {break 1}
+    res2 := if true do -5.5
+    res3 := if true {1} else {"pipou"}
 }

@@ -7,9 +7,9 @@ fn getIdx() -> int {
 }
 
 fn main() {
-    var arr: []int = [1, 2, 3,]
-    var arr2 = [1, 2,]
-    var foo = Foo{arr: [6, 7, getIdx()]}
+    arr: []int = [1, 2, 3,]
+    arr2 := [1, 2,]
+    foo := Foo{arr=[6, 7, getIdx()]}
 
     // Access
     print arr[1]
@@ -25,22 +25,22 @@ fn main() {
 
 
     // Infer value type
-    var emptyArr: []int = []
+    emptyArr: []int = []
 
-    var lateEmptyArr: []int
+    lateEmptyArr: []int
     lateEmptyArr = []
 
-    var ff = Foo{arr: []}
+    ff := Foo{arr=[]}
 
-    var arrOpt: []?int = [1, 2]
+    arrOpt: []?int = [1, 2]
     arrOpt[1] = 2
     arrOpt[1] = null
 
     arrOpt = [1, null]
 
     struct Data { x: int }
-    let dataArr: []Data = [
-        .{ x: 1 },
-        .{ x: 2 },
+    dataArr: []Data = [
+        .{ x=1 },
+        .{ x=2 },
     ]
 }

@@ -7,6 +7,6 @@ fn main() {
         return second
     }
 
-    var callable = first(5)
+    callable := first(5)
     callable()
 }

@@ -30,7 +30,7 @@ fn main() {
     print "----"
 
     // While
-    var i = 0
+    i := 0
     loop: while true {
         if i == 12 do break
         i += 1

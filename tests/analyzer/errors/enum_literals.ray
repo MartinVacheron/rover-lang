@@ -1,10 +1,10 @@
 enum Marker { circle, cross }
 fn main() {
-    var foo = .bar
-    var bar: int = .baz
+    foo := .bar
+    bar: int = .baz
 
-    var marker: Marker = .triangle
+    marker: Marker = .triangle
 
-    var marker: Marker = .circle
+    marker: Marker = .circle
     print marker.cross
 }

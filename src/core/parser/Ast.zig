@@ -152,7 +152,7 @@ pub const VarDecl = struct {
     name: TokenIndex,
     typ: ?*Type,
     value: ?*Expr,
-    is_const: bool = true,
+    is_const: bool,
 
     meta: Meta = .{},
 
@@ -341,7 +341,6 @@ pub const Pattern = union(enum) {
     };
 
     pub const Nullable = struct {
-        token: TokenIndex,
         binding: TokenIndex,
         expr: *Expr,
     };
@@ -510,7 +509,7 @@ pub fn getSpan(self: *const @This(), anynode: anytype) Span {
             else
                 self.getSpan(e.expr),
             .nullable => |e| .{
-                .start = self.token_spans[e.token].start,
+                .start = self.token_spans[e.binding].start,
                 .end = self.getSpan(e.expr).end,
             },
         },

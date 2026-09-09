@@ -5,7 +5,7 @@ enum Foo {
 }
 
 fn main() {
-    let f: Foo|int = Foo.a
+    f: Foo|int = Foo.a
 
     match f is {
         Foo {

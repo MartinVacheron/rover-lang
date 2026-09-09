@@ -7,7 +7,7 @@ struct Vec2 {
 }
 
 fn main() {
-    var v = Vec2.new(12, 99)
+    v := Vec2.new(12, 99)
     print v.x
     print v.y
 }

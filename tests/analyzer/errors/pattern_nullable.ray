@@ -1,9 +1,9 @@
 fn getValue() -> float { return 6.5 }
 fn main() {
     // Check if variable isn't available in outer scope
-    var ok: ?float = 9.
-    if let v = ok {}
+    ok: ?float = 9.
+    if v := ok {}
     print v
 
-    if let e = getValue() {}
+    if e := getValue() {}
 }

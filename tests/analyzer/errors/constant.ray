@@ -1,0 +1,16 @@
+struct Foo {
+    x: int,
+
+    fn f(self) {}
+}
+
+foo :: Foo{ x=1 }
+
+
+fn f() -> int { return 1 }
+fn main() {
+    a: int : f()
+
+    foo.f()
+}
+

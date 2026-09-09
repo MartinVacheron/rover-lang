@@ -1,7 +1,7 @@
 // Global
 fn trash() -> int { return 5 }
 
-var a = trash()
+a := trash()
 
 // Function default
 fn getValue() -> int { return 5 }

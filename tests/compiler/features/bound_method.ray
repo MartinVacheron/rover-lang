@@ -13,11 +13,11 @@ struct Human {
 }
 
 fn main() {
-    var human = Human{ age: 5, name: "Tom" }
-    var trash: int
-    var speak = human.speak
-    var trash2: int
-    var getOld = human.getOld
+    human := Human{ age=5, name="Tom" }
+    trash: int
+    speak := human.speak
+    trash2: int
+    getOld := human.getOld
 
     speak()
     _ = getOld(10)

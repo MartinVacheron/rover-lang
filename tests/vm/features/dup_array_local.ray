@@ -1,6 +1,6 @@
 fn main() {
-    var arr = [1, 2]
-    var ref = arr
+    arr := [1, 2]
+    ref := arr
     print arr
     print ref
     print "------"

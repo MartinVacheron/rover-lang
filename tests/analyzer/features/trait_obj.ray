@@ -23,9 +23,9 @@ fn f(value: Foo) {
 }
 
 fn main() {
-    let bar = Bar{}
+    bar := Bar{}
     f(bar)
-    let baz = Baz{}
+    baz := Baz{}
     f(baz)
 }
 

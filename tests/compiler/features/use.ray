@@ -2,14 +2,14 @@ use data.math
 
 fn main() {
     math.introduce()
-    var vec = math.getVecFromPos(1, 2)
+    vec := math.getVecFromPos(1, 2)
 
     // Bounded
-    var please = math.introduce
+    please := math.introduce
     please()
 
-    var please2 = math.getVecFromPos
-    var vec2 = please2(6, 89)
+    please2 := math.getVecFromPos
+    vec2 := please2(6, 89)
 
     print vec2.y
 }

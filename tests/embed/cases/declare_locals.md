@@ -6,7 +6,7 @@ See if variable declarations are persistent across prompts
 
 - code
 ```
-let a = 65
+a := 65
 ```
 
 ## part
@@ -25,7 +25,7 @@ print a
 
 - code
 ```
-let other = "a string"
+other := "a string"
 ```
 
 ## part

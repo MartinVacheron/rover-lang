@@ -1,8 +1,8 @@
-var globalSet: fn() -> void
-var globalGet: fn() -> void
+globalSet: fn() -> void
+globalGet: fn() -> void
 
 fn set_vars() {
-    var a = "init"
+    a := "init"
 
     // Here, assignment refers to heap variable
     fn set() { a = "updated" }

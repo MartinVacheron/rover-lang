@@ -1,8 +1,8 @@
-struct Foo { a = 1 }
+struct Foo { a := 1 }
 struct Bar { foo: Foo }
 fn main() {
-    var foo = Foo{}
-    var bar = Bar{foo}
+    foo := Foo{}
+    bar := Bar{foo}
 
     print foo.a
     print bar.foo.a

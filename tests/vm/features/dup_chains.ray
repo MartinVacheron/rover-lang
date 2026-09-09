@@ -13,14 +13,14 @@ fn main() {
         name: str = "object",
     }
 
-    var a = [[1, 2], [3, 4]]
-    var p1 = Point{ x: 1, y: 2, past: [[1, 2], [3, 4]]}
-    var p2 = Point{ x: 5, y: 6, past: [[7, 8], [9, 10]]}
-    var p3 = Point{ x: 11, y: 12, past: [[13, 14], [15, 16]]}
-    var p4 = Point{ x: 17, y: 18, past: [[19, 20], [21, 22]]}
+    a := [[1, 2], [3, 4]]
+    p1 := Point{ x=1, y=2, past=[[1, 2], [3, 4]]}
+    p2 := Point{ x=5, y=6, past=[[7, 8], [9, 10]]}
+    p3 := Point{ x=11, y=12, past=[[13, 14], [15, 16]]}
+    p4 := Point{ x=17, y=18, past=[[19, 20], [21, 22]]}
 
-    var poly = Poly{ vertex: [[p1, p2], [p3, p4]] }
-    var obj = Object{ poly } 
+    poly := Poly{ vertex=[[p1, p2], [p3, p4]] }
+    obj := Object{ poly } 
 
     print obj.poly.vertex[1][0].past // [[13, 14], [15, 16]]
 
@@ -32,15 +32,15 @@ fn main() {
     print obj.poly.vertex[1][0].past // [[55, 66], [15, 16]]
     print p3.past // [[11, 22], [33, 44]]
 
-    var ref = poly.vertex
+    ref := poly.vertex
     poly.vertex[1][0].y = 123456
     print ref[1][0].y // 12
 
-    var ref2 = poly.vertex[1]
+    ref2 := poly.vertex[1]
     poly.vertex[1][0].x = 123456
     print ref2[0].x // 11
 
-    var ref3 = poly.vertex[1][0]
+    ref3 := poly.vertex[1][0]
     poly.vertex[1][0].past = [[123, 456]]
     print ref3.past // [[13, 14], [15, 16]] 
 }

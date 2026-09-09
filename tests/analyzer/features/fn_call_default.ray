@@ -4,32 +4,32 @@
 use data.math 
 
 struct Foo {
-    value = 8
+    value := 8
 
-    fn static(a = 5) -> int { return 3 }
+    fn static(a := 5) -> int { return 3 }
 
-    fn method(self, a = 5) -> int {
+    fn method(self, a := 5) -> int {
         return self.value
     }
 }
 
-fn copy(a = 5) -> int {
+fn copy(a := 5) -> int {
     return 5
 }
 
-fn default(c: str, a, b = 7, d, e: bool=false) { }
+fn default(c: str, a, b := 7, d, e: bool = false) { }
 
 struct Baz { a: int }
 enum Bar { aa, bb }
-fn complexDefault(a: Baz = .{ a: 8 }, bar: Bar = .bb, arr: []int = [5, 6]) {
+fn complexDefault(a: Baz = .{ a=8 }, bar: Bar = .bb, arr: []int = [5, 6]) {
 
 }
 
 fn main() {
-    default("abcd", a: 8)
-    default(e: true, a: 8, c: "abcd")
+    default("abcd", a=8)
+    default(e=true, a=8, c="abcd")
 
-    var foo = Foo{}
+    foo := Foo{}
 
     print Foo.static()
 

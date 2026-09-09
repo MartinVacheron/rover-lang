@@ -14,8 +14,8 @@ enum Bar {
 }
 
 fn main() {
-    var foo = Foo.a
-    var bar = Bar.b
+    foo := Foo.a
+    bar := Bar.b
 
     foo == Foo.a
     Foo.a == foo
@@ -25,7 +25,7 @@ fn main() {
     Bar.a != bar
     Bar.a != Bar.b
 
-    var d = Bar.init()
+    d := Bar.init()
     print d.toStr()
 }
 

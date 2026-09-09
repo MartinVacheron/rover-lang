@@ -1,7 +1,7 @@
 while true {}
 loop: while true {}
 while {true} {
-    var tmp = 1+5
+    tmp := 1+5
 }
 
-while let a = nullable { }
+while a := nullable { }

@@ -3,7 +3,7 @@ fn getInt() -> int { return 8 }
 fn main() {
     0..5
 
-    let end = 150
+    end := 150
     getInt()..end
 
     -1+1..40-5

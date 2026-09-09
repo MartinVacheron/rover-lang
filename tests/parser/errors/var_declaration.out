@@ -1,6 +1,3 @@
-expect_name, variable
-expect_type_or_value_in_decl
-expect_name, variable
-expect_colon_before_type
 expect_name, type
-expect_expr, var
+expect_name, type
+expect_expr, struct

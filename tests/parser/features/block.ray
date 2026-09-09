@@ -1,7 +1,7 @@
 { 5 }
 {
-    var a: float }
-{ var a: int
+    a: float }
+{ a: int
 a = 1+56}
 
 blk: {

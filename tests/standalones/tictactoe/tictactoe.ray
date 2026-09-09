@@ -31,7 +31,7 @@ struct Grid {
 
     fn init() -> Self {
         return .{
-            cells: [
+            cells=[
                 [.{}, .{}, .{}],
                 [.{}, .{}, .{}],
                 [.{}, .{}, .{}],
@@ -39,7 +39,7 @@ struct Grid {
         }
     }
 
-    fn playAt(self, x, y: int, marker: Marker, method = false) {
+    fn playAt(self, x, y: int, marker: Marker, method := false) {
         if self.cells[x][y].marker != .none {
             print "Already played in this cell"
             return
@@ -53,10 +53,10 @@ struct Grid {
     }
 
     fn display(self) {
-        var grid = "\n"
+        grid := "\n"
 
         for row, i in self.cells {
-            var line = ""
+            line := ""
 
             for cell, j in row {
                 line += cell.toStr() + (j < self.cells.len() - 1 ? " " : "")
@@ -70,7 +70,7 @@ struct Grid {
 }
 
 fn main() {
-    var grid = Grid.init()
+    grid := Grid.init()
     
     grid.display()
     grid.playAt(1, 2, .circle)
@@ -83,7 +83,7 @@ fn main() {
     grid.playAt(1, 0, .circle, true)
     grid.display()
 
-    grid.playAt(1, 1, .cross, method: true)
+    grid.playAt(1, 1, .cross, method=true)
     grid.display()
 }
 

@@ -44,7 +44,7 @@ else print "ko"
 
 // If as expression
 
-var _res = if true do 5 else 10
+_res := if true do 5 else 10
 
 // Labelled
 cond: if true do print "ok"

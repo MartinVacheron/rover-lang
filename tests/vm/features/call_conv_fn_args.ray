@@ -5,7 +5,7 @@ struct Foo {
 }
 
 struct Bar {
-    value = 10
+    value := 10
 
     fn static(b: bool) -> int { return 3 }
 
@@ -33,8 +33,8 @@ fn argsCallConv2(arg1: fn(bool)->int, arg2: fn(int)->int, arg3: fn(bool)->int) {
 }
 
 fn main() {
-    var bar = Bar{}
-    var foo = Foo{function: copy}
+    bar := Bar{}
+    foo := Foo{function=copy}
 
     argsCallConv(Bar.static, bar.method, bar.importFuncFromMethod())
     argsCallConv2(copy, math.getInt2, foo.function)

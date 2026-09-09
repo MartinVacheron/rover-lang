@@ -29,11 +29,11 @@ fn main() {
     print Bar.speakArg(1)
     print Baz.speakArg(2)
 
-    let bar = Bar{}
+    bar := Bar{}
     bar.method()
     bar.methodArg("done")
 
-    let baz = Baz{}
+    baz := Baz{}
     baz.method()
     baz.methodArg("ah")
 }

@@ -3,7 +3,7 @@ struct Human {
     name: str,
 
     fn new(age: int) -> Self {
-        let name = "Tom"
+        name := "Tom"
         return .{
             age,
             name,
@@ -11,17 +11,17 @@ struct Human {
     }
 }
 
-var answer = 42
+answer := 42
 
 fn main() {
-    var human = Human{ age: 5, name: "Tom" }
-    human = Human{ name: "Tom", age: 5 }
+    human := Human{ age=5, name="Tom" }
+    human = Human{ name="Tom", age=5 }
 
-    var age = 95
-    human = Human{ age, name: "Tom" }
+    age := 95
+    human = Human{ age, name="Tom" }
 
-    var name = "Tom"
-    human = Human{ age: 6, name }
+    name := "Tom"
+    human = Human{ age=6, name }
 
     human = Human{ age, name }
     human = Human{ name, age }
@@ -30,5 +30,5 @@ fn main() {
         answer: int
     }
 
-    var adr = Local{answer}
+    adr := Local{answer}
 }

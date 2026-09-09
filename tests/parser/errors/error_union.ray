@@ -1,2 +1,2 @@
-let a: int![bool]
-let a: float|int ! ?bool
+a: int![]bool
+a: float|int ! ?bool

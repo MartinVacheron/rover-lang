@@ -10,22 +10,28 @@ When declaring a variable, both it's type and initial value are optionals but at
 
 In practise, you rarely need to specify types thanks to type inference.
 
-Mutable variables (variables that can be modified at runtime) are defined with the keyword `var`.
+Mutable variables (variables that can be modified at runtime) are defined with syntaxe `name: type = value`.
 
 ```rust
-var name: str = "Tom"
+name: str = "Tom"
 ```
 
 With type inference, you can simply write:
 
 ```rust
-var name = "Tom"
+name := "Tom"
 ```
 
-Immutable variables (constant variable that can't change value) are defined with the keyword `let`.
+Immutable variables (constant variable that can't change value) are defined with syntaxe `name: type : value`.
 
 ```rust
-let count = 5 // same as: let count: int = 5
+count: int : 5
+```
+
+With type inference, you can simply write:
+
+```rust
+count :: 5
 ```
 
 ### Multiple declarations
@@ -33,32 +39,32 @@ let count = 5 // same as: let count: int = 5
 You can declare multiple variables at the same type in three ways:
 - If you declare the same number of values as the number of variables, they will be assigned in order:
 ```rust
-var a, b, c = 5, "ok", false
+a, b, c := 5, "ok", false
 ```
 
 In this example, `a` is of type `int` and holds the value `5`, `b` is a `str` and holds `"ok"` and `c` is a `bool` and holds `false`.
 This is equivalent to:
 ```rust
-var a = 5
-var b = "ok"
-var c = false
+a := 5
+b := "ok"
+c := false
 ```
 
 - If you declare only one value, it will be assigned to all the variables:
 ```rust
-var a, b, c = 5
+a, b, c := 5
 ```
 
 This is equivalent to:
 ```rust
-var a = 5
-var b = 5
-var c = 5
+a := 5
+b := 5
+c := 5
 ```
 
 - If you provide no value, they will all be *uninit* and you **have to** specify their type:
 ```rust
-var a, b, c: float
+a, b, c: float
 ```
 
 ### Wildcard
@@ -108,8 +114,8 @@ Precedence expresses the *weight* of each operator used to determine the order o
 For example `==` has a higher precedence than `and` meaning that the two expressions below are equivalent:
 
 ```zig
-if (a == 1 and b == 2) { ... }
-if ((a == 1) and (b == 2)) { ... }
+if a == 1 and b == 2 { ... }
+if (a == 1) and (b == 2) { ... }
 ```
 
 Both equality checks are gonna be resolved before the logical `and`.
@@ -189,8 +195,8 @@ TODO: bool to int?
 Ray strings hold a sequence of `UTF-8` characters. They can be created either with single quote `'` or double quotes `"`:
 
 ```zig
-var name = 'Tom'
-var name = "Tom"
+name := 'Tom'
+name := "Tom"
 ```
 
 You can concatenate strings using `+` operator and repeat them with by multiplying them witn an unsigned integer `uint`:
@@ -204,7 +210,7 @@ assert("o" * 5 + "k" == "oooook")
 Strings can be indexed with `[]` syntax with either a scalar or a range (like arrays).
 
 ```rust
-let name = "Tom"
+name := "Tom"
 assert(name[1] == "o")
 assert(name[1..3] == "om")
 ```
@@ -219,20 +225,20 @@ It means that the variable of type `?T` holds either `null` or a value of type `
 A variable of type `?T` will be initialized with `null` if no value is provided.
 
 ```zig
-var id: ?int
+id: ?int
 assert(id == null)
 ```
 
 As providing a value of type `T` will infer the variable's type to `T`, you have to explicitly annotate the type to declare a nullable value.
 
 ```zig
-var id: ?int = 5
+id: ?int = 5
 ```
 
 Expressions returning nullable values can be chained with `?`. Then chain breaks at the first `null` encountered and resolves as `null`.
 
 ```rust
-let name = getUser()?.informations?.getName()
+name := getUser()?.informations?.getName()
 ```
 
 Here, if `getUser` or `informations` is `null`, it breaks the chain and return `null`.
@@ -242,7 +248,7 @@ When using a nullable value, you can provide a fallback value with `??` operator
 ```zig
 fn getId() -> ?int { ... }
 
-let id = getId() ?? 0
+id := getId() ?? 0
 ```
 
 In pattern matching, the value `!null` can be used to represent any-non-null value.
@@ -252,8 +258,8 @@ In pattern matching, the value `!null` can be used to represent any-non-null val
 In Ray, everything is by default passed by value, meaning that whenever you assign a value or pass a value to an expression (function call, structure literal, ...) you copy the data. So any changes on the value won't be reflected on the source of the value:
 
 ```zig
-var count = 0
-var other_count = count
+count := 0
+other_count := count
 count += 1
 assert(count == 1)
 assert(other_count == 0)
@@ -263,8 +269,8 @@ If you want to store a *pointer* to the source of the value to reflect changes o
 with `.*` postfix operator (known as *dereferencing*).
 
 ```zig
-var count = 0
-var ref_count = *count
+count := 0
+ref_count := *count
 ref_count.* += 1
 assert(count == 1)
 assert(ref_count.* == 1)
@@ -279,9 +285,9 @@ struct User {
 
 fn foo(user: *User) {
     // Syntax 1
-    var id = user.*.id
+    id := user.*.id
     // Syntax 2 (preferred)
-    var id = user.id
+    id := user.id
 }
 ```
 
@@ -292,8 +298,8 @@ In practise the syntax 2 is the preferred way.
 An array is an mutable homogeneous sequence of data, meaning that all the values share the same type. To declare an array literal you must surround values with `[]` and seperate them with commas. Type will be infered from the values so you don't have to write it. If multiple types are found among the values, an [inline unions](#Inline%20unions).
 
 ```zig
-var data = [1, 2, 3] // type is: []int
-var data = [
+data := [1, 2, 3] // type is: []int
+data := [
     1,
     "on",
     4,
@@ -303,7 +309,7 @@ var data = [
 Arrays support indexing with `[<index>]` syntax noth for access and assignemnt:
 
 ```zig
-var data = [3.14, 6.18]
+data := [3.14, 6.18]
 assert(data[1] == 6.18)
 data[0] = 1.41
 assert(data[0] == 1.41)
@@ -313,7 +319,7 @@ You can use ranges to index an array as well as a step with the syntax: `<first>
 Index can be negative.
 
 ```rust
-var arr = [1, 2, 3, 4, 5, 6, 7]
+arr := [1, 2, 3, 4, 5, 6, 7]
 print(arr[3..]) // [4, 5, 6, 7]
 print(arr[..2]) // [1, 2]
 print(arr[4..6]) // [5, 6]
@@ -326,7 +332,7 @@ print(arr[-4]) // 4
 Arrays' size are dynamic so you can add/remove elements at runtime. To get the length of the array you can use `len()` method. Add/removing is done with respectively methods `push()` and `pop()`.
 
 ```zig
-var data = [1, 2, 3]
+data := [1, 2, 3]
 assert(data.len() == 3)
 data.push(8)
 assert(data.len() == 4)
@@ -342,11 +348,11 @@ Accessing tuples values is done in two ways:
 - Using field's named if one: `tuple.a`
 
 ```zig
-var tuple = (1, false, "ko") // type is: (int, bool, str)
+tuple := (1, false, "ko") // type is: (int, bool, str)
 assert(tuple.2 == "ko")
 
 // With named fields
-var tuple = (1, a: true, status: "ok") // type is: (int, a: bool, status: str)
+tuple := (1, a: true, status: "ok") // type is: (int, a: bool, status: str)
 assert(tuple.status == "ko")
 ```
 
@@ -355,27 +361,27 @@ Names fields are part of the type. It means two things:
 - You have to explictly declare them if na value is provided at declaration site:
 
 ```zig
-var tuple: (int, b: bool, status: str)
+tuple: (int, b: bool, status: str)
 tuple = (1, b: true, status: "ok")
 ```
 
 - Two tuples with same fields types aren't equivalent if their names mismatch:
 
 ```zig
-var tuple1: (int, float) = (1, 2)
-var tuple2: (int, float) = (3, 4)
+tuple1: (int, float) = (1, 2)
+tuple2: (int, float) = (3, 4)
 
 // This is allowed
 tuple1 = tuple2
 
-var tuple1: (a: int, b: float) = (a: 1, b: 2)
-var tuple2: (a: int, b: float) = (a: 3, b: 4)
+tuple1: (a: int, b: float) = (a: 1, b: 2)
+tuple2: (a: int, b: float) = (a: 3, b: 4)
 
 // This is allowed
 tuple1 = tuple2
 
-var tuple1: (a: int, b: float) = (a: 1, b: 2)
-var tuple2: (c: int, d: float) = (c: 3, d: 4)
+tuple1: (a: int, b: float) = (a: 1, b: 2)
+tuple2: (c: int, d: float) = (c: 3, d: 4)
 
 // This is a compilation error
 tuple1 = tuple2
@@ -389,7 +395,7 @@ Keys must share the same type and value must share the same type but keys and va
 
 ```zig
 // type is: [int: str]
-var map = [
+map := [
     5: 'bed',
     70: 'chair',
 ]
@@ -398,20 +404,20 @@ var map = [
 You can create an empty map with `[:]` but you have to provide the type as it can't be infered:
 
 ```swift
-var map: [str: bool] = [:]
+map: [str: bool] = [:]
 ```
 
 You can retreive a value from a map by indexing it with a key:
 
 ```zig
-var map = ["monday": 55, "tuesday": -4]
+map := ["monday": 55, "tuesday": -4]
 assert(map["monday"] == 55)
 ```
 
 When assigning a value to a key, if the key already exists the value is updated otherwise the key-value is created:
 
 ```zig
-var map = ["monday": 55, "tuesday": -4]
+map := ["monday": 55, "tuesday": -4]
 assert(map["monday"].len() == 2)
 map["sunday"] = 12
 assert(map["monday"].len() == 3)
@@ -429,7 +435,7 @@ A block can be:
 - Labeled with `:name`
 
 ```zig
-let value = {
+value := {
     // Local scope
     var tmp = 5
     tmp += 8
@@ -440,10 +446,10 @@ let value = {
 Naming blocks allow to nest them:
 
 ```zig
-let value = v: {
-    var tmp = 5
+value := v: {
+    tmp := 5
     tmp += {
-        let count = getCounter()
+        count := getCounter()
         // Targets outter block
         if count == 10 do break :v count
         break count
@@ -454,7 +460,7 @@ let value = v: {
 You can name any expression's block, for example:
 
 ```zig
-let value = if true v: { break :v 5 } else 8
+value := if true v: { break :v 5 } else 8
 ```
 
 ### If expressions
@@ -466,7 +472,7 @@ If used as an expression, all branches must return a value. If `then` branch's b
 // do
 if true do print("ok")
 
-let x = if condition do 10 else 20
+x := if condition do 10 else 20
 ```
 
 #### Chaining
@@ -474,7 +480,7 @@ let x = if condition do 10 else 20
 You can chain `if`/`else`:
 
 ```zig
-let r = if a > 0 do
+r := if a > 0 do
     "positive"
 else if a == 0 do
     "zero"
@@ -482,21 +488,17 @@ else
     "negative"
 ```
 
-#### If-let / if-var
+#### If pattern
 
-Ray supports *pattern-matching inside conditions* through two related constructs:
-- `if let` — binds only immutable values
-- `if var` — binds a mutable variable when destructuring
+Ray supports *pattern-matching inside conditions*.
 
-Both are shorthand for a `match` expression with a single arm and an implicit `else {}`.
-
-You may destructure any value directly inside the `if let` condition. This is useful for inspecting structures, enums, unions, and nested patterns without writing a full `match`.
+You may destructure any value directly inside the `if` condition. This is useful for inspecting structures, enums, unions, and nested patterns without writing a full `match`.
 
 ```rust
 struct User { id: ?int, name: str }
 
 fn verify(user: User) -> bool {
-    if let .{ id: !null, name: "Tom" } = user {
+    if .{ id = !null, name = "Tom" } := user {
         return true
     }
 
@@ -509,7 +511,7 @@ It allow powerful and short way to test for patterns instead of the full `match`
 ```rust
 fn verify(user: User) -> bool {
     match user {
-        .{ id: !null, name: "Tom" } => return true
+        .{ id = !null, name = "Tom" } => return true
         else => {}
     }
 
@@ -517,12 +519,12 @@ fn verify(user: User) -> bool {
 }
 ```
 
-When the right-hand side is a nullable type (`?T`), the `if let` expression automatically tests for `null`.
+When the right-hand side is a nullable type (`?T`), the expression automatically tests for `null`.
 
 ```rust
-let id: ?int = 8
+id: ?int = 8
 
-if let i = id {
+if i := id {
     // Here `i` is of type int
 }
 ```
@@ -553,7 +555,7 @@ To iterate over an array you can:
 - Iterate only the elements:
 
 ```rust
-let arr = [Vec2{...}, Vec2{...}]
+arr := [Vec2{...}, Vec2{...}]
 
 for v in arr { ... }
 ```
@@ -561,7 +563,7 @@ for v in arr { ... }
 - Iterate over the elements and their index:
 
 ```rust
-let arr = [Vec2{...}, Vec2{...}]
+arr := [Vec2{...}, Vec2{...}]
 
 for v, i in arr { ... } // 'i' is the index here
 ```
@@ -569,7 +571,7 @@ for v, i in arr { ... } // 'i' is the index here
 - Iterate over the elements and taking a pointer to them:
 
 ```rust
-let arr = [Vec2{...}, Vec2{...}]
+arr := [Vec2{...}, Vec2{...}]
 
 for v in *arr { ... }
 for v, i in *arr { ... }
@@ -638,10 +640,10 @@ fn foo(a: int, b: float, c: bool, d: str) {}
 foo(1, 2., false, "ok")
 
 // All named in any order
-foo(d: "ok", b: 2., c: false, a: 1)
+foo(d="ok", b=2., c=false, a=1)
 
 // Positionals before named
-foo(1, 2., d: "ok", c: false)
+foo(1, 2., d="ok", c=false)
 ```
 
 #### Default values
@@ -662,7 +664,7 @@ Default values must be compile-time constants.
 When providing a default value, you can omit the type as it is infered from the value
 
 ```rust
-fn greet(name="world") -> str {
+fn greet(name := "world") -> str {
     return "Hello {name}!"
 }
 ```
@@ -672,9 +674,9 @@ fn greet(name="world") -> str {
 Functions are first class objects, meaning that you can pass them around as any other type.
 
 ```rust
-fn greet(name="world") {}
+fn greet(name := "world") {}
 
-let g = greet
+g := greet
 g("Tom") // "Hello Tom!"
 ```
 
@@ -690,7 +692,7 @@ arr.map(swap)
 Anonymous functions use the `fn` keyword without a name:
 
 ```rust
-let double = fn(x: int) -> int { return x * 2 }
+double := fn(x: int) -> int { return x * 2 }
 ```
 
 They can be used inline:
@@ -704,8 +706,8 @@ arr.map(fn(x) -> int { return x + 1 })
 Closures capture surrounding variables by pointers:
 
 ```rust
-let factor = 3
-let mul = fn(x: int) -> int { return x * factor }
+factor := 3
+mul := fn(x: int) -> int { return x * factor }
 mul(4) // 12
 ```
 
@@ -719,7 +721,7 @@ In this exmaple, `parseInt` method on strings returns `int!ParseErr` and `toBase
 fn getInput() -> str!InputErr {}
 
 fn compute() {
-    let x: int!(InputErr & ParseErr & IntErr) = getInput()!.parseInt("12")!.toBase(2)
+    x: int!(InputErr & ParseErr & IntErr) = getInput()!.parseInt("12")!.toBase(2)
     ...
 }
 ```
@@ -733,7 +735,7 @@ Errors are propagated up the call stack using `!` at the **end of expression**:
 
 ```rust
 fn compute() -> int!ParserErr {
-    let x = parseInt("12")! // propagates error upward
+    x := parseInt("12")! // propagates error upward
     return x * 2
 }
 ```
@@ -743,9 +745,9 @@ If we take the previous example:
 ```rust
 fn compute() {
     // Here, x is of type: int!(InputErr & ParseErr & IntErr)
-    let x = getInput()!.parseInt("12")!.toBase(2)
+    x := getInput()!.parseInt("12")!.toBase(2)
     // Here x is of type int but function `compute` now returns an error on fail
-    let x = getInput()!.parseInt("12")!.toBase(2)!
+    x := getInput()!.parseInt("12")!.toBase(2)!
 }
 ```
 
@@ -755,19 +757,19 @@ Errors can be converted to `null` if `?` is used at the end of an expression tha
 
 ```rust
 // Here, x is of type: int!(InputErr & ParseErr & IntErr)
-let x = getInput()!.parseInt("12")!.toBase(2)
+x := getInput()!.parseInt("12")!.toBase(2)
 // Here x is of type ?int
-let x = getInput()!.parseInt("12")!.toBase(2)?
+x := getInput()!.parseInt("12")!.toBase(2)?
 ```
 
 It's a useful pattern to handle several errors in a unified way as well as using `if let` constructs:
 
 ```rust
 fn getData(path: str) -> ?Data {
-    if let data = try? fetchDataFromDisk() {
+    if data := try? fetchDataFromDisk() {
         return data
     }
-    if let data = try? fetchDataFromServer() {
+    if data := try? fetchDataFromServer() {
         return data
     }
 
@@ -786,7 +788,7 @@ Just after the `trap` keyword, you can provide an identifier that binds to the c
 
 ```rust
 
-let i = parseInt("abc") trap e {
+i := parseInt("abc") trap e {
     print(e)
     break 5
 }
@@ -797,7 +799,7 @@ If you don't need the captured error, you can ignore it with `_`:
 
 ```rust
 
-let i = parseInt("abc")!.toBase(2) trap _ {
+i := parseInt("abc")!.toBase(2) trap _ {
     fail ParseErr.invalidBase
 }
 ```
@@ -809,7 +811,7 @@ It binds the error to the provided identifier.
 
 ```rust
 fn createUser(input: str) User!UserErr {
-    let id = parseInt(input)!.toBase(2) trap match e {
+    id := parseInt(input)!.toBase(2) trap match e {
         .invalidInt => {
             print("not an integer")
             fail .invalidParsing
@@ -884,8 +886,8 @@ struct Config {
 }
 // Same as
 struct Config {
-    port = 8080
-    host = "localhost"
+    port := 8080
+    host := "localhost"
 }
 ```
 
@@ -896,21 +898,21 @@ If a field has a default value, it becomes optional during initialization.
 Ray supports structure literals:
 
 ```rust
-let p = Point { x: 3, y: 4 }
+p := Point { x=3, y=4 }
 ```
 
 Fields with defaults may be omitted:
 
 ```rust
-let c = Config { host: "127.0.0.1" }
+c := Config { host="127.0.0.1" }
 ```
 
 Ray also supports redundant shorthand syntax, where field names match variable names:
 
 ```rust
-let x = 10
-let y = 20
-let p = Point { x, y }
+x := 10
+y := 20
+p := Point { x, y }
 ```
 
 #### Methods
@@ -939,11 +941,11 @@ struct Point {
     x, y: int
 
     fn origin() -> Point {
-        return Point { x: 0, y: 0 }
+        return Point { x=0, y=0 }
     }
 }
 
-let o = Point.origin()
+o := Point.origin()
 ```
 
 Static functions are ideal for constructors or utility functions.
@@ -964,7 +966,7 @@ struct Point {
     x, y: int
 
     fn origin() -> Self {
-        return Self { x: 0, y: 0 }
+        return Self { x=0, y=0 }
     }
 }
 ```
@@ -1002,9 +1004,9 @@ use `.{}` syntax:
 fn move(to: Point) { ... }
 
 // Infered to Point
-move(.{x: 5, y: 10})
+move(.{x=5, y=10})
 // Equivalent
-move(Point{x: 5, y: 10})
+move(Point{x=5, y=10})
 ```
 
 #### Private fields
@@ -1025,7 +1027,7 @@ struct User {
 Attempting to access a private field outside the declaration is a compile-time error:
 
 ```rust
-let u = User { name: "Ava", password: "secret" } // error: password is private
+u := User{ name="Ava", password="secret" } // error: password is private
 u.hash(5) // error: hash is private
 ```
 
@@ -1050,7 +1052,7 @@ fn f() {
     defer print("exit f")
     defer print("before exiting")
 
-    var a = 1
+    a := 1
     {
         defer {
             a += 5
@@ -1093,13 +1095,13 @@ See [pattern matchin](#Pattern%20matching) for usage.
 An inline union is written using `|`:
 
 ```rust
-let v: int|float|bool = 42
+v: int|float|bool = 42
 ```
 
 As always, the type will automatically be infered:
 
 ```rust
-let arr = [1, 4.5, false] // type is infered as: [](int|float|bool)
+arr := [1, 4.5, false] // type is infered as: [](int|float|bool)
 ```
 
 > [!NOTE]
@@ -1156,8 +1158,8 @@ Match on specific values:
 
 ```rust
 match p {
-    Point { x: 0, y } => print("On Y-axis at {y}")
-    Point { x, y: 0 } => print("On X-axis at {x}")
+    Point { x=0, y } => print("On Y-axis at {y}")
+    Point { x, y=0 } => print("On X-axis at {x}")
     else => print("General point")
 }
 ```
@@ -1222,7 +1224,7 @@ union Shape3D = {
     cube: int,
     cylinder: (int, int),
 }
-let shape: Shape2D|Shape3D = .square(5)
+shape: Shape2D|Shape3D = .square(5)
 
 match shape is {
     Shape2D {
@@ -1327,15 +1329,15 @@ struct Vec {
 
     fn translate(self, delta: Movement) -> Self {
         return match delta {
-            .int(v) => .{ x: self.x + float(v), y: self.y + float(v) }
-            .float(v) => .{ x: self.x + v, y: self.y + v }
-            .Vec(v) => .{ x: self.x + v.x, y: self.y + v.y } 
+            .int(v) => .{ x=self.x + float(v), y=self.y + float(v) }
+            .float(v) => .{ x=self.x + v, y=self.y + v }
+            .Vec(v) => .{ x=self.x + v.x, y=self.y + v.y } 
         }
     }
 }
 
 fn action(v: Vec, movements: [str:Vec]) {
-    let amount: Movement = .vec(movements["default"]) ?? .int(0)
+    amount: Movement = .vec(movements["default"]) ?? .int(0)
     v.translate(amount)
 }
 ```
@@ -1348,15 +1350,15 @@ struct Vec {
 
     fn translate(self, delta: int|float|Self) -> Self {
         return match delta {
-            int => .{ x: self.x + float(delta), y: self.y + float(delta) }
-            float => .{ x: self.x + delta, y: self.y + delta }
-            Self => .{ x: self.x + delta.x, y: self.y + delta.y } 
+            int => .{ x=self.x + float(delta), y=self.y + float(delta) }
+            float => .{ x=self.x + delta, y=self.y + delta }
+            Self => .{ x=self.x + delta.x, y=self.y + delta.y } 
         }
     }
 }
 
 fn action(v: Vec, movements: [str:Vec]) {
-    let amount = movements["default"] ?? 0 // here, amount is of type: Vec|int
+    amount := movements["default"] ?? 0 // here, amount is of type: Vec|int
     v.translate(amount)
 }
 ```
@@ -1391,11 +1393,11 @@ var direction = Direction.west
 Shorthand dot literal (when type is known), works in arrays, struct fields, function calls, etc.:
 
 ```zig
-var dir: Direction = .south
+dir: Direction = .south
 assert(dir == .south)
 
 // Here too
-var path: []Direction = [.west, .west, .north]
+path: []Direction = [.west, .west, .north]
 
 // Same for functions
 fn go(dir: Direction) { ... }
@@ -1421,9 +1423,9 @@ union Token {
 Constructing payloaded variants:
 
 ```rust
-let t1 = Token.identifier("box")
-let t2 = Token.number(42)
-let t3: Token = .brace(.left)
+t1 := Token.identifier("box")
+t2 := Token.number(42)
+t3: Token = .brace(.left)
 ```
 
 #### Tag comparison
@@ -1436,7 +1438,7 @@ union Foo {
     b,
 }
 
-let foo = Foo.a(5)
+foo := Foo.a(5)
 assert(foo == Foo.a)
 assert(foo == .a)
 assert(foo != .b)
@@ -1479,7 +1481,7 @@ union Event {
 
 match event {
     .click(.{x, ..}) => print("Clicked at x={x}")
-    .key(.{code, alt: true, ..}) => print("Alt+{code}")
+    .key(.{code, alt=true, ..}) => print("Alt+{code}")
     else => {}
 }
 ```
@@ -1548,7 +1550,7 @@ enum Direction {
 
 ### Enum arrays
 You can declare an enum-indexed array using the syntax `[Enum]elem_type`, where the enum acts as the index type. The array has exactly as many slots as there are enum members:
-```
+```rust
 intensities: [Color]int = [
     .red = 255,
     .green = 128,
@@ -1617,8 +1619,8 @@ fn openConfig(path: str) -> str!FileErr { ... }
 fn parseFields(content: str) -> []Config.Field!ParserErr { ... }
 
 fn parseConfig(path: str) Config!ConfigErr {
-    let content = openConfig(path)!     // propagates FileErr
-    let fields = parseFields(content)!  // propagates ParserErr
+    content := openConfig(path)!     // propagates FileErr
+    fields := parseFields(content)!  // propagates ParserErr
     ...
 }
 ```
@@ -1636,7 +1638,6 @@ It works with structs, enums, tuples, arrays, literals, nullables, errors, and s
 
 Pattern matching appears in:
 - `match` expressions
-- `if let / if var` conditional destructuring
 - loop patterns
 - function parameters (for destructuring arguments)
 
@@ -1680,8 +1681,8 @@ struct User {
 }
 
 match user {
-    .{ id: !null, name: "Tom" } => print("Tom has an ID")
-    .{ name: "Alice", .. } => print("Alice, ID irrelevant")
+    .{ id=!null, name="Tom" } => print("Tom has an ID")
+    .{ name="Alice", .. } => print("Alice, ID irrelevant")
     _ => print("Other user")
 }
 ```
@@ -1697,7 +1698,7 @@ When using `.{ field: var name }` it creates a binding to the field that can be 
 Patterns recurse automatically:
 
 ```rust
-let pair = (10, (20, 30))
+pair := (10, (20, 30))
 
 match pair {
     (10, (20, x)) => print(x)   // prints 30
@@ -1761,9 +1762,9 @@ Patterns nest naturally:
 ```rust
 match config {
     .{
-        database: .{
-            host: var h,
-            port: 5432,
+        database=.{
+            host=var h,
+            port=5432,
         },
         ..,
     } => print("Postgres on {h}")
@@ -1822,7 +1823,7 @@ struct Vec {
     impl Display {
         fn staticFn() { return true }
 
-        fn method(self, a=4) -> str {
+        fn method(self, a := 4) -> str {
             return "value: " + str(a + self.x + self.y)
         }
     }
@@ -1844,10 +1845,10 @@ trait Foo {
 
 struct Bar {
     impl Foo {
-        fn speak(self, a=1) {
+        fn speak(self, a := 1) {
             print "Bar " + str(a)
         }
-        fn speak2(self, a=1) {
+        fn speak2(self, a := 1) {
             print a == 1
         }
     }
@@ -1877,7 +1878,7 @@ struct Rect {
     }
 }
 
-let rect = Rect{ color: "green" }
+rect := Rect{ color: "green" }
 rect.area() // calls the function defined on the structure
 rect.Drawable.area() // calls the trait implementation
 ```
@@ -1899,48 +1900,3 @@ use .^.math{ Vec2, Rect }           // imports 'Vec2' and 'Rect' structures from
 use .^.math{ Vec2 as V, Rect as R } // creates an alias 'V' for 'Vec2' and 'R' for 'Rect'
 ```
 
-## Clone on write (COW)
-
-Ray uses *clone-on-write* semantics for all heap-allocated objects (arrays, maps, strings, ...) to provide value semantics with efficient sharing.
-
-Clone-on-write enables Ray to behave like a language where values are copied, while internally avoiding unnecessary allocations. When a value is duplicated, Ray lets both copies share the same underlying storage as long as they are not mutated.
-If either copy is modified, Ray automatically performs a separation and creates a private copy for the mutating side.
-
-This gives you:
-- predictable value semantics (no hidden aliasing),
-- efficient read-only sharing,
-- cheap passing of large values,
-- and safe, intuitive behavior for mutability.
-
-### How it works
-
-When a value is duplicated...
-
-```rust
-let a = [1, 2, 3]
-let b = a
-```
-
-…both variables reference the same internal buffer.
-
-When you mutate one of them:
-
-```rust
-b.push(4)
-```
-
-Ray checks whether the buffer is shared:
-- If it is exclusive, Ray mutates it in place.
-- If it is shared, Ray **clones the buffer** and then applies the mutation to the new copy.
-
-After the mutation, `a` and `b` no longer share storage.
-
-For example:
-
-```rust
-let a = [1, 2, 3]
-let b = a // no copy, only increments interal reference count
-assert(*a == *b)
-
-b[0] = 10 // perfoms a copy, leaving `a` untouched
-```

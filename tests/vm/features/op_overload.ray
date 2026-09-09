@@ -3,22 +3,22 @@ struct Vec2 {
 
     fn +(self, other: Self) -> Self {
         return .{
-            x: self.x + other.x,
-            y: self.y + other.y,
+            x=self.x + other.x,
+            y=self.y + other.y,
         }
     }
 
     fn -(self, other: Self) -> Self {
         return .{
-            x: self.x - other.x,
-            y: self.y - other.y,
+            x=self.x - other.x,
+            y=self.y - other.y,
         }
     }
 
     fn -(self) -> Self {
         return .{
-            x: -self.x,
-            y: -self.y,
+            x=-self.x,
+            y=-self.y,
         }
     }
 
@@ -26,24 +26,24 @@ struct Vec2 {
     fn *(self, other: Self|int|float) -> Self {
         return match other is {
             int => .{
-                x: self.x * other,
-                y: self.y * other,
+                x=self.x * other,
+                y=self.y * other,
             }
             float => .{
-                y: int(self.y * other),
-                x: int(self.x * other),
+                y=int(self.y * other),
+                x=int(self.x * other),
             }
             Self => .{
-                x: self.x * other.x,
-                y: self.y * other.y,
+                x=self.x * other.x,
+                y=self.y * other.y,
             }
         }
     }
 
     fn /(self, other: Self) -> Self {
         return .{
-            x: self.x / other.x,
-            y: self.y / other.y,
+            x=self.x / other.x,
+            y=self.y / other.y,
         }
     }
 
@@ -53,25 +53,25 @@ struct Vec2 {
 }
 
 fn main() {
-    let v1 = Vec2{ x: 4, y: 12 }
-    let v2 = Vec2{ x: 2, y: 4 }
+    v1 := Vec2{ x=4, y=12 }
+    v2 := Vec2{ x=2, y=4 }
 
-    let add = v1 + v2
+    add := v1 + v2
     add.display()
 
-    let sub = v1 - v2
+    sub := v1 - v2
     sub.display()
 
-    let mul1 = v1 * v2
+    mul1 := v1 * v2
     mul1.display()
-    let mul2 = v1 * 3
+    mul2 := v1 * 3
     mul2.display()
-    let mul3 = v1 * 4.5
+    mul3 := v1 * 4.5
     mul3.display()
 
-    let div = v1 / v2
+    div := v1 / v2
     div.display()
 
-    let neg = -v1
+    neg := -v1
     neg.display()
 }

@@ -7,7 +7,7 @@ struct Foo {
 }
 
 struct Bar {
-    value = 0
+    value := 0
 
     fn static() -> int { return 3 }
 
@@ -21,9 +21,9 @@ fn copy() -> int {
 }
 
 fn main() {
-    var bar = Bar{}
+    bar := Bar{}
 
-    var foo = Foo{function: copy}
+    foo := Foo{function=copy}
     print foo.function()
 
     foo.function = Bar.static

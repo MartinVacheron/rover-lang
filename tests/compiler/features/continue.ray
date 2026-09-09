@@ -10,21 +10,21 @@ fn main() {
 
     outer: for i in 0..3 {
         inner: for j in 3..6 {
-            let a = 1
+            a := 1
             continue :inner
         }
     }
 
     outer: for i in 0..3 {
-        let a = 1
+        a := 1
         inner: for j in 3..6 {
-            let b = 2
+            b := 2
             continue :outer
         }
     }
 
     // While
-    var i = 0
+    i := 0
     loop: while i < 4 {
         continue
     }
@@ -35,15 +35,15 @@ fn main() {
 
     cond1: while i < 6 {
         cond2: while i < 4 {
-            let a = 1
+            a := 1
             continue :cond2
         }
     }
 
     cond1: while i < 4 {
-        let a = 1
+        a := 1
         cond2: while i < 4 {
-            let b = 2
+            b := 2
             continue :cond1
         }
     }

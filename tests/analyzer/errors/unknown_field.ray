@@ -3,6 +3,6 @@ struct Person {
 }
 
 fn main() {
-    var tom = Person{agge: 4}
+    tom := Person{agge=4}
 }
 

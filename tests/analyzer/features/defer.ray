@@ -10,7 +10,7 @@ fn main() {
     }
 
     {
-        var a = 1
+        a := 1
         {
             defer {
                 a += 1

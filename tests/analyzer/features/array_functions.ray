@@ -1,5 +1,5 @@
 fn main() {
-    let arr = [1, 2]
+    arr := [1, 2]
     arr.push(5)
     print arr.len()
     print arr.pop()

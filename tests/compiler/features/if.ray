@@ -10,12 +10,12 @@ fn main() {
 
     if false { print "yes" } else { print "no" }
 
-    var a = if true { break 1 } else { break 2 }
+    a := if true { break 1 } else { break 2 }
 
-    var b = if { break true } do 5 + 6 else 1
+    b := if { break true } do 5 + 6 else 1
 
-    var c = if { break not true } { break 5 + 6 } else {
-        var tmp = 1
+    c := if { break not true } { break 5 + 6 } else {
+        tmp := 1
         print tmp
         tmp = 5
         break a + b + tmp

@@ -1,9 +1,9 @@
 struct Foo { x: int }
 
 fn main() {
-    let arr: []Foo = [
-        .{ x: 1 },
-        .{ x: 2 },
+    arr: []Foo = [
+        .{ x=1 },
+        .{ x=2 },
     ]
 
     for f in *arr {

@@ -8,7 +8,7 @@ union Foo {
 }
 
 fn main() {
-    var foo = Foo.a(5)
+    foo := Foo.a(5)
     foo = .b(1.2)
     foo = .c
     foo = .d(.south)

@@ -11,7 +11,7 @@ fn main() {
     print "D" // expect D
 
     // Labelled block with value, break inside inner block
-    var x = val: {
+    x := val: {
         {
             break :val 42
         }
@@ -20,13 +20,13 @@ fn main() {
     print x // expect 42
 
    // Conditional break in labelled block
-    var y = val: {
+    y := val: {
         if true do break :val 10
         else break :val 20
     }
     print y // expect 10
 
-    var n = num: {
+    n := num: {
         if false do break :num 5
         print "fallthrough" // expect fallthrough
         break :num 7
@@ -48,7 +48,7 @@ fn main() {
     print "after a"
 
     // If then with do
-    var z = b: if true { 
+    z := b: if true { 
         {
             {
                 break :b 1

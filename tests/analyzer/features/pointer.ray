@@ -4,14 +4,14 @@ struct Foo {
 }
 
 fn main() {
-    let a = 1
-    let b = *a
+    a := 1
+    b := *a
 
-    let foo = Foo{ a: 2, b: "ok" }
-    let ref1 = *foo.a
-    let ref2 = *foo.b
+    foo := Foo{ a=2, b="ok" }
+    ref1 := *foo.a
+    ref2 := *foo.b
 
-    let arr = [1, 2, 3]
-    let arrPtr = *arr[1]
+    arr := [1, 2, 3]
+    arrPtr := *arr[1]
 }
 

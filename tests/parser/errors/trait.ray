@@ -1,7 +1,7 @@
 trait {}
 trait Foo 
 trait Foo {
-    var a = 1
+    a := 1
 }
 trait Foo {
     impl Bar {}

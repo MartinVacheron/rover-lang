@@ -1,7 +1,7 @@
 Foo{45}
 // For synchronization
-var a = 1
+a := 1
 Foo{a
 
-var a = Foo{a=5}
-var a = Foo{
+a := Foo{a: 5}
+a := Foo{

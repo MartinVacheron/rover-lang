@@ -6,6 +6,6 @@ fn main() {
             struct Foo {}
         }
 
-        var foo = Foo{}
+        foo := Foo{}
     }
 }

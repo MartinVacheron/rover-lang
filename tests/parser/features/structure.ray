@@ -12,7 +12,7 @@ struct Bar {
     life: float,
     parent: Human,
 
-    number = 1234,
+    number := 1234,
     money: int = 120
 }
 

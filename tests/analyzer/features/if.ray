@@ -1,10 +1,10 @@
 fn main() {
-    var res = if true do 4 else 5.6
-    var res2 = if true {
+    res := if true do 4 else 5.6
+    res2 := if true {
         break 5.6
     } else 4
 
-    var res3 = if true {
+    res3 := if true {
         break 8.7
     } else if true {
         break 6
@@ -15,14 +15,14 @@ fn main() {
     _ = if true do false  else { break true }
 
     _ = if true {
-        var tmp = 5.5
-        var adder = 8.7
+        tmp := 5.5
+        adder := 8.7
         break tmp + adder
     } else 4
 
     _ = if {
-        var tmp = true
-        var noise = 1
+        tmp := true
+        noise := 1
         break tmp
     } do 1.5 else { break 4 }
 

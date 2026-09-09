@@ -53,7 +53,6 @@ pub const Token = struct {
         .{ "impl", .impl },
         .{ "in", .in },
         .{ "is", .is },
-        .{ "let", .let },
         .{ "match", .match },
         .{ "not", .not },
         .{ "null", .null },
@@ -67,7 +66,6 @@ pub const Token = struct {
         .{ "true", .true },
         .{ "union", .@"union" },
         .{ "use", .use },
-        .{ "var", .@"var" },
         .{ "while", .@"while" },
     });
 
@@ -124,7 +122,6 @@ pub const Token = struct {
         less_equal,
         less_less,
         less_less_equal,
-        let,
         match,
         minus,
         minus_equal,
@@ -159,7 +156,6 @@ pub const Token = struct {
         underscore,
         @"union",
         use,
-        @"var",
         @"while",
 
         base_prefix_uppercase,
@@ -957,17 +953,16 @@ test "keywords" {
     defer lexer.deinit();
     lexer.lex(
         \\\and else false for fn if null or print return 
-        \\\self struct true var while not do use break 
-        \\\as enum match let in fail trap is continue trait impl
+        \\\self struct true while not do use break 
+        \\\as enum match in fail trap is continue trait impl
         \\\union extern defer
     );
 
     const res = [_]Token.Tag{
-        .@"and",    .@"else",  .false,       .@"for",    .@"fn",   .@"if",    .null,     .@"or",     .print,
-        .@"return", .new_line, .self,        .@"struct", .true,    .@"var",   .@"while", .not,       .do,
-        .use,       .@"break", .new_line,    .as,        .@"enum", .match,    .let,      .in,        .fail,
-        .trap,      .is,       .@"continue", .trait,     .impl,    .new_line, .@"union", .@"extern", .@"defer",
-        .eof,
+        .@"and",      .@"else",  .false, .@"for",    .@"fn",    .@"if",     .null,     .@"or", .print,
+        .@"return",   .new_line, .self,  .@"struct", .true,     .@"while",  .not,      .do,    .use,
+        .@"break",    .new_line, .as,    .@"enum",   .match,    .in,        .fail,     .trap,  .is,
+        .@"continue", .trait,    .impl,  .new_line,  .@"union", .@"extern", .@"defer", .eof,
     };
 
     for (0..res.len) |i| {
@@ -997,11 +992,11 @@ test "leading zeros" {
 test "underscore" {
     var lexer = Self.init(std.testing.allocator);
     defer lexer.deinit();
-    lexer.lex("var _under   _=1   var _1art   var ___yo");
+    lexer.lex("_under   _=1   _1art   ___yo");
 
     const res = [_]Token.Tag{
-        .@"var", .identifier, .underscore, .equal,      .int,
-        .@"var", .identifier, .@"var",     .identifier, .eof,
+        .identifier, .underscore, .equal, .int,
+        .identifier, .identifier, .eof,
     };
 
     for (0..res.len) |i| {

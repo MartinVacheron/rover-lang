@@ -1,11 +1,11 @@
 fn getValue() -> ?float { return 5. }
 
 fn main() {
-    if let v = getValue() {
+    if v := getValue() {
         print v
     }
 
-    while let v = getValue() {
+    while v := getValue() {
         print v
     }
 }

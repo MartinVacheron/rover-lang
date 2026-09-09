@@ -5,9 +5,9 @@ union Foo {
 }
 
 fn main() {
-    var foo = Foo.a(5, 2)
-    var foo = Foo.a()
-    var foo = Foo.a(a: 9)
+    foo := Foo.a(5, 2)
+    foo := Foo.a()
+    foo := Foo.a(a=9)
 
-    var foo: Foo = .b
+    foo: Foo = .b
 }

@@ -5,7 +5,7 @@ fn main() {
     // local
     {
         fn another_bool(a: int, b: str) -> bool {
-            var tmp = 5
+            tmp := 5
             return true or false
         }
     }

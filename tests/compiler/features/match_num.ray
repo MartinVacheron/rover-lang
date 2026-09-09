@@ -1,5 +1,5 @@
 fn main() {
-    let value = 2
+    value := 2
 
     print match value {
         0 => 10
@@ -9,7 +9,7 @@ fn main() {
         else => 100
     }
 
-    let fvalue = 2.0
+    fvalue := 2.0
 
     print match fvalue {
         -1.2 => -10

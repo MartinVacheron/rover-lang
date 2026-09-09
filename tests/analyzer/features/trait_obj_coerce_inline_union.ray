@@ -7,7 +7,7 @@ struct Foo {
 fn f(value: int|float|Bar) {}
 
 fn main() {
-    let foo = Foo{}
+    foo := Foo{}
     f(foo)
 }
 

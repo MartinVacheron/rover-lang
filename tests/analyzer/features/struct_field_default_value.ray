@@ -2,17 +2,17 @@ struct Foo { a: int }
 enum Bar { aa, bb }
 struct Vec2 {
     a, b: float,
-    x = 8,
+    x := 8,
     y: bool,
     z, w: str = "yup",
     c: ?int = 3,
-    foo: Foo = .{ a: 8 },
+    foo: Foo = .{ a=8 },
     bar: Bar = .bb,
     arr: []bool = [true, false],
 }
 
 fn main() {
-    var v = Vec2 { a: 1., b: 2., y: true }
-    v = Vec2 { y: false, x: 7, a: 3., b: 99. }
+    v := Vec2 { a=1., b=2., y=true }
+    v = Vec2 { y=false, x=7, a=3., b=99. }
 }
 

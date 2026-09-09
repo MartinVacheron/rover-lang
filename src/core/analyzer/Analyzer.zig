@@ -54,8 +54,6 @@ pub const Context = struct {
     in_for: bool,
     in_trap: bool,
     in_trait: bool,
-    in_deref: bool,
-    in_field: bool,
     /// To know if we're in an equality, used for implicit selector on unions
     in_eq: bool,
 
@@ -69,8 +67,6 @@ pub const Context = struct {
         .in_trap = false,
         .in_trait = false,
         .in_eq = false,
-        .in_deref = false,
-        .in_field = false,
     };
 
     pub fn setAndGetPrevious(self: *Context, comptime f: FieldEnum(Context), value: @FieldType(Context, @tagName(f))) @TypeOf(value) {
@@ -829,7 +825,7 @@ fn fnParams(self: *Self, params: []Ast.VarDecl, ctx: *Context) Error!Params {
         _ = try self.declareVariable(
             param_name,
             param_res.type,
-            .{ .captured = p.meta.captured, .is_fn_param = true },
+            .{ .captured = p.meta.captured, .is_fn_param = true, .constant = false },
             span,
         );
         decls.putAssumeCapacity(param_name, .{
@@ -980,8 +976,13 @@ fn varDecl(self: *Self, node: *const Ast.VarDecl, ctx: *Context) StmtResult {
         checked_type = try self.performTypeCoercion(checked_type, &value_res, false, self.ast.getSpan(value));
 
         // For now, we don't accept anything other than scalar constants
-        if (self.scope.isGlobal() and self.irb.getInstr(value_res.instr) != .constant) {
-            return self.err(.non_comptime_in_global, self.ast.getSpan(value));
+        if (!value_res.ti.comp_time) {
+            if (self.scope.isGlobal()) {
+                return self.err(.non_comptime_in_global, self.ast.getSpan(value));
+            }
+            if (node.is_const) {
+                return self.err(.non_comptime_constant, self.ast.getSpan(value));
+            }
         }
 
         break :v value_res;
@@ -2252,8 +2253,6 @@ fn findImplicitSelctInUnion(ty: *const Type.InlineUnion, tag: InternerIdx) ?TagR
 
 fn deref(self: *Self, expr: Ast.Deref, ctx: *Context) Result {
     const span = self.ast.getSpan(expr.expr);
-    const prev_deref = ctx.setAndGetPrevious(.in_deref, true);
-    defer ctx.in_deref = prev_deref;
     const res = try self.analyzeExpr(expr.expr, .value, ctx);
 
     const ref = res.type.as(.pointer) orelse return self.err(
@@ -2298,9 +2297,6 @@ fn fail(self: *Self, expr: Ast.Fail, ctx: *Context) Result {
 
 pub fn field(self: *Self, expr: *const Ast.Field, ctx: *Context) Result {
     const span = self.ast.getSpan(expr.structure);
-
-    ctx.in_field = true;
-    defer ctx.in_field = false;
     var struct_res = try self.analyzeExpr(expr.structure, .any, ctx);
 
     // Auto-dereference
@@ -2883,12 +2879,19 @@ fn resolveIdentifier(self: *Self, token_name: Ast.TokenIndex, initialized: bool,
         res.variable.used = true;
         res.variable.initialized = true;
 
-        // We can assign to a constant pointer if we're dereferencing it
-        if (res.variable.constant and
-            ctx.in_assign and
-            !ctx.in_deref and
-            !(ctx.in_field and res.variable.type.is(.pointer))) return self.err(
-            .{ .assign_to_constant = .{ .name = text } },
+        if (ctx.in_assign) {
+            if (res.variable.constant or
+                ((res.variable.kind == .param or res.variable.kind == .iter) and !res.variable.type.is(.pointer)))
+            {
+                return self.err(
+                    .{ .assign_to_constant = .{ .name = text } },
+                    span,
+                );
+            }
+        }
+
+        if (ctx.in_call and res.variable.constant) return self.err(
+            .{ .call_method_on_constant = .{ .name = text } },
             span,
         );
 
@@ -4620,7 +4623,7 @@ pub fn typeName(self: *const Self, ty: *const Type) []const u8 {
 const VarConf = struct {
     captured: bool = false,
     initialized: bool = true,
-    constant: bool = true,
+    constant: bool = false,
     comp_time: bool = false,
     ext_mod: ?ModIndex = null,
     is_fn_param: bool = false,

@@ -1,5 +1,5 @@
 fn main() {
-    var value = true
+    value := true
     match value {
         true => print true
         false => print false

@@ -14,9 +14,8 @@ pub const ParserMsg = union(enum) {
     expect_brace_before: struct { what: []const u8 },
     expect_block_or_do: struct { what: []const u8 },
     expect_closing_pipe,
-    expect_colon_before_type,
     expect_comma_array_values,
-    expect_colon_struct_lit,
+    expect_equal_struct_lit,
     expect_equal_enum_discr,
     expect_expr: struct { found: []const u8 },
     expect_field_type_or_default,
@@ -32,7 +31,6 @@ pub const ParserMsg = union(enum) {
     expect_paren_after_fn_name,
     expect_paren_after_fn_params,
     expect_ternary_colon,
-    expect_type_or_value_in_decl,
     extern_fn_has_body,
     extern_sym_has_decl: struct {
         name: []const u8,
@@ -42,7 +40,6 @@ pub const ParserMsg = union(enum) {
     invalid_extern,
     import_alias_with_items,
     invalid_discard,
-    invalid_label,
     invalid_module_path,
     invalid_struct_literal,
     match_duplicate_wildcard,
@@ -87,9 +84,8 @@ pub const ParserMsg = union(enum) {
             .expect_brace_after => |e| writer.print("expect opening brace after {s}", .{e.what}),
             .expect_brace_before => |e| writer.print("expect opening brace before {s}'s body", .{e.what}),
             .expect_closing_pipe => writer.writeAll("expect closing '|' after closure's parameters list"),
-            .expect_colon_before_type => writer.writeAll("invalid variable type declaration"),
             .expect_comma_array_values => writer.writeAll("expect a ',' between array values"),
-            .expect_colon_struct_lit => writer.writeAll("expect either ':' or '}' in structure literal field value"),
+            .expect_equal_struct_lit => writer.writeAll("expect either '=' or '}' in structure literal field value"),
             .expect_equal_enum_discr => writer.writeAll("expect '=' before tag's value or nothing"),
             .expect_expr => |e| writer.print("expected expression, found \"{s}\"", .{e.found}),
             .expect_field_type_or_default => writer.writeAll("structure fileds must be typed or have a default value"),
@@ -105,13 +101,11 @@ pub const ParserMsg = union(enum) {
             .expect_paren_after_fn_name => writer.writeAll("expect opening parenthesis '(' after function's name"),
             .expect_paren_after_fn_params => writer.writeAll("expect closing parenthesis ')' after function's parameters"),
             .expect_ternary_colon => writer.writeAll("expect a ':' after 'then' branch of ternary expression"),
-            .expect_type_or_value_in_decl => writer.writeAll("expect either a value or a type in varibale declaration"),
             .extern_fn_has_body => writer.writeAll("unexpected extern function's body"),
             .extern_sym_has_decl => |e| writer.print("extern {t} '{s}' has {t} declarations", .{ e.sym, e.name, e.decl }),
             .invalid_extern => writer.writeAll("can only declare extern functions, enums and structures"),
             .import_alias_with_items => writer.writeAll("can't use a module alias when importing specific items"),
             .invalid_discard => writer.writeAll("invalid discard expression"),
-            .invalid_label => writer.writeAll("can't label this expression"),
             .invalid_module_path => writer.writeAll("module path can contain only identifiers and '^' characters"),
             .invalid_struct_literal => writer.writeAll("structure literal can only be used on literals and members"),
             .match_duplicate_wildcard => writer.writeAll("there already is a wildcard arm"),
@@ -169,11 +163,10 @@ pub const ParserMsg = union(enum) {
             .expect_brace_after => writer.writeAll("add an openning brace '{'"),
             .expect_block_or_do => writer.writeAll("open a block (labelled or not) with ':label {' or use 'do' keyword before statement"),
             .expect_closing_pipe => writer.writeAll("add a closing '|' to end closure's parameters list"),
-            .expect_colon_before_type => writer.writeAll("add ':' before type name"),
             .expect_comma_array_values => writer.writeAll(
                 "values must be separated with commas in array declaration. Maybe you just forgot to close the declaration with ']'?",
             ),
-            .expect_colon_struct_lit => writer.writeAll("syntax is either: Foo{ x: value } or Foo{ x } (if a variable 'x' is in scope)"),
+            .expect_equal_struct_lit => writer.writeAll("syntax is either: Foo{ x=value } or Foo{ x } (if a variable 'x' is in scope)"),
             .expect_equal_enum_discr => writer.writeAll(
                 \\enum declaration syntax is:
                 \\enum <name> {
@@ -194,7 +187,6 @@ pub const ParserMsg = union(enum) {
             .expect_name_after_dot => writer.writeAll("field access syntax is: 'Structure.field'"),
             .expect_new_line_pm_arm => writer.writeAll("each arm of pattern matching construct (match and when) have to be on their own line"),
             .expect_ternary_colon => writer.writeAll("ternary expression syntax is: <condition> ? <then> : <else>"),
-            .expect_type_or_value_in_decl => writer.writeAll("provide either a default value so that the compiler can infer the type or a type"),
             .extern_fn_has_body => writer.writeAll(
                 \\extern functions can't have body, they only declare function prototypes that will be found in native dynamic libraries
             ),
@@ -203,7 +195,6 @@ pub const ParserMsg = union(enum) {
                 "you can either alias the whole module without importing specific items or alias each specific items",
             ),
             .invalid_discard => writer.writeAll("add '=' token: _ = call()"),
-            .invalid_label => writer.writeAll("can only label 'for', 'while', 'blocks' and 'if' statements"),
             .invalid_module_path => writer.writeAll(
                 \\valid module path syntaxes are:
                 \\  relative: starts with a '.': '.dir1.dir2.file'

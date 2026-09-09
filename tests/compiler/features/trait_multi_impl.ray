@@ -21,11 +21,11 @@ struct Baz {
 }
 
 fn main() {
-    let bar = Bar{}
+    bar := Bar{}
     bar.speak()
     bar.other()
 
-    let baz = Baz{}
+    baz := Baz{}
     baz.speak()
     baz.other()
 }

@@ -5,21 +5,21 @@ struct Data {
 enum Dir {up, down}
 
 fn useData(data: ?Data, dir: ?Dir) {
-    if let d = data {
+    if d := data {
         print d.a
         print d.b
     }
-    if let d = dir {
+    if d := dir {
         print d
     }
 }
 
 fn main() {
-    useData(.{ a: 1, b: 2 }, .down)
+    useData(.{ a=1, b=2 }, .down)
     useData(null, null)
 
-    let data: ?Data = .{ a: 3, b: 4 }
-    if let d = data {
+    data :?Data = .{ a=3, b=4 }
+    if d := data {
         print d.a
         print d.b
     }

@@ -1,4 +1,4 @@
 fn main() {
-    var invalid: Self
+    invalid: Self
     fn invalid(a: int) -> Self {}
 }

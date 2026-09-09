@@ -1,6 +1,6 @@
 struct Iterator {
     items: []int,
-    count = 0,
+    count := 0,
 
     fn next(self) -> ?int {
         if self.count == self.items.len() do return null
@@ -14,7 +14,7 @@ struct Data {
     second: []int,
 
     fn init() -> Self {
-        return .{ first: [], second: [] }
+        return .{ first=[], second=[] }
     }
 
     fn initWithData(first: []int, second: []int) -> Self {
@@ -22,25 +22,25 @@ struct Data {
     }
 
     fn iterator(self, cat: str) -> Iterator {
-        return .{ items: cat == "first" ? self.first : self.second }
+        return .{ items=cat == "first" ? self.first : self.second }
     }
 }
 
 fn main() {
-    var first = [1, 2, 3]
-    var second = [4, 5, 6]
+    first := [1, 2, 3]
+    second := [4, 5, 6]
     
-    var data = Data{ first, second }
+    data := Data{ first, second }
 
     print "Test 1"
-    var it = data.iterator("first")
-    while let v = it.next() {
+    it := data.iterator("first")
+    while v := it.next() {
         print v // expect 1, 2, 3
     }
 
     print "Test 2"
     it = data.iterator("second")
-    while let v = it.next() {
+    while v := it.next() {
         print v // expect 4, 5, 6
     }
 
@@ -50,26 +50,26 @@ fn main() {
     data.second = [78, 91, 23]
 
     it = data.iterator("first")
-    while let v = it.next() {
+    while v := it.next() {
         print v // expect 12, 34, 56 
     }
 
     print "Test 4"
     it = data.iterator("second")
-    while let v = it.next() {
+    while v := it.next() {
         print v // expect 78, 91, 23 
     }
 
     print "Test 5"
-    data = Data.initWithData(second: [120, 340, 560], first: [780, 910, 230])
+    data = Data.initWithData(second=[120, 340, 560], first=[780, 910, 230])
     it = data.iterator("first")
-    while let v = it.next() {
+    while v := it.next() {
         print v // expect 780, 910, 230 
     }
 
     print "Test 6"
     it = data.iterator("second")
-    while let v = it.next() {
+    while v := it.next() {
         print v // expect 120, 340, 560 
     }
 }

@@ -3,15 +3,15 @@ struct Vec2 {
 
     fn +(self, other, other2: Self) -> Self {
         return .{
-            x: self.x + other.x,
-            y: self.y + other.y,
+            x=self.x + other.x,
+            y=self.y + other.y,
         }
     }
 
     fn /(self) -> Self {
         return .{
-            x: self.x,
-            y: self.y,
+            x=self.x,
+            y=self.y,
         }
     }
 

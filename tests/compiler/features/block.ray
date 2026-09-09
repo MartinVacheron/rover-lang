@@ -1,25 +1,25 @@
 fn main() {
     _ = {break 5}
-    { var a = 5 }
-    { var a: int }
+    { a := 5 }
+    { a: int }
 
     {
-        var a = 1
+        a := 1
         _ = 3+4
-        var b = 5
+        b := 5
         print b
     }
 
-    var a: int = {
-        var nb = 7
+    a: int = {
+        nb := 7
         break nb
     }
 
-    var b: int = {
-        var space = 67
-        var other = "just chillin"
-        var nb = 7
-        var sneaky = 90
+    b: int = {
+        space := 67
+        other := "just chillin"
+        nb := 7
+        sneaky := 90
         break nb
     }
 }

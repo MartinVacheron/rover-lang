@@ -5,14 +5,14 @@ fn f(a: *Foo) {
 }
 
 fn main() {
-    let a = 1
-    let ptr = *a
+    a := 1
+    ptr := *a
     print ptr.*
 
     ptr.* = 6
     print ptr.*
 
-    let foo = Foo{ x: 4 }
+    foo := Foo{ x=4 }
     print foo.x
     f(*foo)
     print foo.x

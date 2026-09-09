@@ -4,7 +4,7 @@
 use data.math 
 
 struct Foo {
-    value = 8
+    value := 8
 
     fn static() -> int { return 3 }
 
@@ -22,9 +22,9 @@ fn copy() -> int {
 }
 
 fn main() {
-    var foo = Foo{}
+    foo := Foo{}
 
-    var bound = Foo.static
+    bound := Foo.static
     print bound()
 
     bound = copy
@@ -37,12 +37,12 @@ fn main() {
     print bound()
 
     // Call conv survives a layer
-    var tmp = foo.importFuncFromMethod
+    tmp := foo.importFuncFromMethod
     print tmp()
     bound = tmp()
     print bound()
                     
     // Builtins
-    let bind = int
+    bind := int
     print bind(5.6)
 }

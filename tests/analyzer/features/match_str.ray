@@ -1,5 +1,5 @@
 fn main() {
-    let s = "value"
+    s := "value"
 
     print match s {
         "volue" => 1

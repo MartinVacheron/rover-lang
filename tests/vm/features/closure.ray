@@ -1,8 +1,8 @@
-var globalSet: fn() -> void
-var globalGet: fn() -> void
+globalSet: fn() -> void
+globalGet: fn() -> void
 
 fn set_vars() {
-    var a = "init"
+    a := "init"
 
     // Here, assignment refers to heap variable
     fn set() { a = "updated" }
@@ -13,7 +13,7 @@ fn set_vars() {
 }
 
 fn outer() -> fn() -> void {
-    var x = "outside"
+    x := "outside"
 
     fn inner() {
         print x
@@ -23,7 +23,7 @@ fn outer() -> fn() -> void {
 }
 
 fn main() {
-    var closure = outer()
+    closure := outer()
     closure()
 
     set_vars()

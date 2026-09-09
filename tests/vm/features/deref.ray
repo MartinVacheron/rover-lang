@@ -11,12 +11,12 @@ struct Foo {
 }
 
 fn main() {
-    var a = "sss"
-    let b = *a
+    a := "sss"
+    b := *a
     print b == *a
     print b.*
  
-    let c = *b
+    c := *b
     print c == *b
     print c.* == *a
     print c.* == b
@@ -25,12 +25,12 @@ fn main() {
     print b.*
     print c.*.*
 
-    var value = 9
-    var bar = Bar{ a: true, b: "ok" }
-    let pvalue = *value
-    let pbar = *bar
+    value := 9
+    bar := Bar{ a=true, b="ok" }
+    pvalue := *value
+    pbar := *bar
 
-    let foo = Foo{ b: *value, c: *bar, d: *pvalue, e: *pbar }
+    foo := Foo{ b=*value, c=*bar, d=*pvalue, e=*pbar }
     print foo.b == *value
     print foo.b.* == value
 

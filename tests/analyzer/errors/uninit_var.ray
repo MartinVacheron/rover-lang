@@ -1,6 +1,6 @@
-var a: bool
+a: bool
 
-var _empty: str
+_empty: str
 
 fn main() {
     print a + 1

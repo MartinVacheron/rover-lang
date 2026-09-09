@@ -28,7 +28,7 @@ fn getMarker() -> Marker {
 }
 
 fn main() {
-    var marker: Marker = .none
+    marker: Marker = .none
     print marker
 
     marker = .circle
@@ -37,7 +37,7 @@ fn main() {
     markerStuff(.circle)
     markerStuff2(.cross)
 
-    var cell = Cell{}
+    cell := Cell{}
     cell.marker = .circle
     print cell.marker
     print cell.marker2

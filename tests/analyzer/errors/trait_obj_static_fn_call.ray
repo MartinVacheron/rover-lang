@@ -13,7 +13,7 @@ fn callTraitObj(to: Foo) {
 }
 
 fn main() {
-    let bar = Bar{}
+    bar := Bar{}
     callTraitObj(bar)
 }
 

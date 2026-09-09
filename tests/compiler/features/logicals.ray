@@ -1,5 +1,5 @@
 fn main() {
-    let b = false
+    b := false
     b and b
     b or b
 }

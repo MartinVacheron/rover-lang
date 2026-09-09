@@ -1,13 +1,13 @@
-var loc2 = "sneaky"
+loc2 := "sneaky"
 
 fn main() {
     {
-        var loc1 = "local"
-        var loc2 = " var"
+        loc1 := "local"
+        loc2 := " var"
 
         loc2 = "assign local"
         {
-            var loc2 = "sublocal"
+            loc2 := "sublocal"
             loc2 = "assign sub"
         }
         loc2 = loc1

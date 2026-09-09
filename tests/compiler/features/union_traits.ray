@@ -26,7 +26,7 @@ fn main() {
     Bar.speak()
     Bar.speakNoDef()
 
-    var bar: Bar = .a(1)
+    bar: Bar = .a(1)
     bar.method()
     bar.methodNoDef()
 }

@@ -53,8 +53,7 @@
             "binding": "a",
             "expr": {
                 "identifier": "nullable"
-            },
-            "constant": "true"
+            }
         },
         "body": {}
     }

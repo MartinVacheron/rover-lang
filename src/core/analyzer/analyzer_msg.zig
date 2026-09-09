@@ -13,6 +13,7 @@ pub const AnalyzerMsg = union(enum) {
     big_self_outside_decl,
     block_all_path_dont_return,
     break_val_in_non_val_block,
+    call_method_on_constant: struct { name: []const u8 },
     call_method_on_type: struct { name: []const u8 },
     call_static_on_instance: struct { name: []const u8 },
     call_fn_on_trait: struct { name: []const u8 },
@@ -95,6 +96,15 @@ pub const AnalyzerMsg = union(enum) {
     no_continuable_scope,
     no_main,
     non_bool_cond: struct { what: []const u8, found: []const u8 },
+    non_comptime_constant,
+    non_comptime_default: struct {
+        kind: []const u8,
+
+        pub fn new(kind: enum { field, parameter }) @This() {
+            return .{ .kind = @tagName(kind) };
+        }
+    },
+    non_comptime_in_global,
     non_indexable_type: struct { found: []const u8 },
     not_a_trait: struct { name: []const u8 },
     non_null_comp_optional: struct { found: []const u8 },
@@ -130,14 +140,6 @@ pub const AnalyzerMsg = union(enum) {
     unknown_module: struct { name: []const u8 },
     unknown_param: struct { name: []const u8 },
     unknown_struct_field: struct { name: []const u8 },
-    non_comptime_in_global,
-    non_comptime_default: struct {
-        kind: []const u8,
-
-        pub fn new(kind: enum { field, parameter }) @This() {
-            return .{ .kind = @tagName(kind) };
-        }
-    },
     use_uninit_var: struct { name: []const u8 },
     void_array,
     void_param,
@@ -159,6 +161,7 @@ pub const AnalyzerMsg = union(enum) {
             .break_val_in_non_val_block => writer.writeAll("can't return a value from this scope"),
             .call_fn_on_trait => |e| writer.print("'{s}' is trait, can't call functions on it", .{e.name}),
             .call_static_fn_on_trait_obj => |e| writer.print("can't call static function '{s}' on an instance", .{e.fn_name}),
+            .call_method_on_constant => |e| writer.print("structure '{s}' is declared as a constant", .{e.name}),
             .call_method_on_type => |e| writer.print("method '{s}' called on a type", .{e.name}),
             .call_static_on_instance => |e| writer.print("static function '{s}' called on an instance", .{e.name}),
             .cant_build_native_struct => |e| writer.print("can't use structure literal syntax on native structure '{s}'", .{e.name}),
@@ -238,8 +241,11 @@ pub const AnalyzerMsg = union(enum) {
             .named_arg_in_bounded => writer.writeAll("named argument are not allowed with bounded functions"),
             .no_continuable_scope => writer.writeAll("no continuable block found in current scope"),
             .no_main => writer.writeAll("no main function found"),
-            .non_indexable_type => |e| writer.print("can't index type '{s}'", .{e.found}),
+            .non_comptime_constant => writer.writeAll("constant can't be evaluated at compile time"),
+            .non_comptime_default => |e| writer.print("only compilation time expressions are allowed for {s}", .{e.kind}),
+            .non_comptime_in_global => writer.writeAll("only compilation time expressions are allowed in global scope"),
             .non_bool_cond => |e| writer.print("non boolean condition, found type '{s}'", .{e.found}),
+            .non_indexable_type => |e| writer.print("can't index type '{s}'", .{e.found}),
             .not_a_trait => |e| writer.print("type '{s}' is not a trait", .{e.name}),
             .non_null_comp_optional => |e| writer.print("can't compare anything else than 'null' to optional type, found '{s}'", .{e.found}),
             .non_struct_field_access => writer.writeAll("attempting to access a field on a non structure type"),
@@ -274,8 +280,6 @@ pub const AnalyzerMsg = union(enum) {
             .unknown_module => |e| writer.print("unknown module '{s}'", .{e.name}),
             .unknown_param => |e| writer.print("function doesn't have parameter '{s}'", .{e.name}),
             .unknown_struct_field => |e| writer.print("unknown structure's field '{s}'", .{e.name}),
-            .non_comptime_in_global => writer.writeAll("only compilation time expressions are allowed in global scope"),
-            .non_comptime_default => |e| writer.print("only compilation time expressions are allowed for {s}", .{e.kind}),
             .use_uninit_var => |e| writer.print("variable '{s}' is used uninitialized", .{e.name}),
             .void_array => writer.writeAll("can't declare an array of 'void' values"),
             .void_param => writer.writeAll("function parameters can't be of 'void' type"),
@@ -291,7 +295,9 @@ pub const AnalyzerMsg = union(enum) {
             .already_declared_in_trait,
             => writer.writeAll("you can use another name, use symbol like _ or open a local scope with '{}'"),
             .already_impl_trait => writer.writeAll("a type can only implement a trait once"),
-            .assign_to_constant => writer.writeAll("variables declared with 'const' and function parameters are constant, their value can't be changed"),
+            .assign_to_constant => writer.writeAll(
+                \\variables declared with '::', function parameters and iterators are constant, their value can't be modified
+            ),
             .assign_type => writer.writeAll("types aren't assignable to variables"),
             .big_self_outside_decl => writer.writeAll("'Self' can only be used in declarations like enums or structures to refer to the current type"),
             .block_all_path_dont_return => writer.writeAll("when using a block as an expression, all paths must return a value"),
@@ -304,6 +310,7 @@ pub const AnalyzerMsg = union(enum) {
                 "traits' static functions can only be called on types implementing the trait or the trait itself " ++
                     "if it has a default implementation",
             ),
+            .call_method_on_constant => writer.writeAll("can't call methods on constants as they could mutate the value"),
             .call_method_on_type, .call_static_on_instance => writer.writeAll(
                 "static functions can only be called on types and methods can only be called on instances",
             ),
@@ -311,8 +318,8 @@ pub const AnalyzerMsg = union(enum) {
             .cant_continue_scope, .no_continuable_scope => writer.writeAll("'continue' can only be used with 'for' and 'while' statements"),
             .cant_infer_array_type => writer.writeAll(
                 \\can't extract any type information from an empty array '[]'. you must either declare a type in variable's
-                \\signature like: 'var arr: [int] = []' or initialize the array with at least one value (not possible every time).
-                \\Also, doing 'var arr: [int] = []' is equivalent to 'var arr: [int]'.
+                \\signature like: 'var arr: []int = []' or initialize the array with at least one value (not possible every time).
+                \\Also, doing 'var arr: []int = []' is equivalent to 'var arr: []int'.
             ),
             .cant_infer_implicit_selector => writer.writeAll("add explicit type annotation 'variable: type' or use type name in case of structure literals"),
             .container_unknown_decl => |e| writer.print("refer to {s}'s declaration to see available tags and declarations", .{e.kind}),
@@ -371,7 +378,7 @@ pub const AnalyzerMsg = union(enum) {
             .for_iter_ptr_non_array => writer.writeAll("only arrays can be iterated over while taking a pointer to the element"),
             .implicit_select_no_type => writer.writeAll(
                 \\to use implicit selector syntax, you must provide a type so that the compiler can infer it.
-                \\use either: 'var foo: Foo = .a' or a variable with already known type"
+                \\use either: 'foo: Foo = .a' or a variable with already known type"
             ),
             .implicit_select_invalid_type => writer.writeAll("implicit selector syntax is only allowed with enum and union types"),
             .implicit_select_union_tag_with_type => writer.writeAll(
@@ -453,6 +460,7 @@ pub const AnalyzerMsg = union(enum) {
                 \\can only use index syntax '[]' for builtin types array, string and map or types defining the Indexable trait
             ),
             .non_bool_cond => |e| writer.print("'{s}' conditions can only be boolean type", .{e.what}),
+            .non_comptime_constant => writer.writeAll("only compile time computable values can be assigned to constants"),
             .non_comptime_default => writer.writeAll("only compilation time known expressions are allowed for default values"),
             .non_comptime_in_global => writer.writeAll("use a constant expression or initialize the value later in a local scope"),
             .non_null_comp_optional => writer.writeAll("replace the compared value with 'null' literal or change the condition"),

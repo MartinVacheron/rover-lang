@@ -126,6 +126,10 @@ fn getTkField(self: *const Self, kind: anytype, idx: usize) TokenFieldType(kind)
     };
 }
 
+fn getTag(self: *const Self, index: usize) Token.Tag {
+    return self.token_tags[index];
+}
+
 fn advance(self: *Self) void {
     self.token_idx += 1;
 }
@@ -150,6 +154,11 @@ fn matchAndSkip(self: *Self, kind: Token.Tag) bool {
 /// Checks if we currently are at a token
 fn check(self: *const Self, kind: Token.Tag) bool {
     return self.token_tags[self.token_idx] == kind;
+}
+
+/// Checks token tag at index from current token index
+fn checkRelative(self: *const Self, kind: Token.Tag, index: usize) bool {
+    return self.token_tags[self.token_idx + index] == kind;
 }
 
 fn skipNewLines(self: *Self) void {
@@ -230,6 +239,8 @@ fn synchronize(self: *Self) void {
     self.ctx.panic_mode = false;
 
     while (!self.check(.eof)) {
+        if (self.isAtVarDecl(true)) return;
+
         switch (self.token_tags[self.token_idx]) {
             .@"enum",
             .@"extern",
@@ -237,7 +248,6 @@ fn synchronize(self: *Self) void {
             .@"for",
             .@"if",
             .left_brace,
-            .let,
             .match,
             .print,
             .@"return",
@@ -245,7 +255,6 @@ fn synchronize(self: *Self) void {
             .trait,
             .@"union",
             .use,
-            .@"var",
             .@"while",
             => return,
             else => self.advance(),
@@ -254,7 +263,7 @@ fn synchronize(self: *Self) void {
 }
 
 fn declaration(self: *Self) Error!Node {
-    return if (self.match(.@"var") or self.match(.let))
+    return if (self.isAtVarDecl(true))
         self.varDecl()
     else if (self.match(.@"fn"))
         self.fnDecl(false)
@@ -281,6 +290,32 @@ fn declaration(self: *Self) Error!Node {
             return self.errAtPrev(.invalid_extern);
         }
     } else self.statement();
+}
+
+/// Peeks past 'ident (',' ident)*' to see if a declaration colon follows
+/// Does not consume any tokens
+fn isAtVarDecl(self: *const Self, allow_multiple: bool) bool {
+    if (!self.check(.identifier)) return false;
+
+    var i = self.token_idx + 1;
+
+    if (allow_multiple) {
+        while (self.getTag(i) == .comma) : (i += 2) {
+            if (self.getTag(i + 1) != .identifier) return false;
+        }
+    }
+
+    if (self.getTag(i) != .colon) return false;
+
+    return !isLabelTarget(self.getTag(i + 1));
+}
+
+/// Whether `tag` is something a label can point at: `for`, `while`, `if` or block
+fn isLabelTarget(tag: Token.Tag) bool {
+    return switch (tag) {
+        .@"for", .@"while", .@"if", .left_brace => true,
+        else => false,
+    };
 }
 
 fn enumDecl(self: *Self, is_extern: bool) Error!Node {
@@ -421,7 +456,12 @@ fn fnParams(self: *Self, is_closure: bool) Error![]Ast.VarDecl {
 
             const ty = self.allocator.create(Ast.Type) catch oom();
             ty.* = .{ .self = name_idx };
-            params.append(self.allocator, .{ .name = name_idx, .typ = ty, .value = null }) catch oom();
+            params.append(self.allocator, .{
+                .name = name_idx,
+                .typ = ty,
+                .value = null,
+                .is_const = true,
+            }) catch oom();
             continue;
         }
 
@@ -434,7 +474,7 @@ fn fnParams(self: *Self, is_closure: bool) Error![]Ast.VarDecl {
             try self.expect(.identifier, .expectName("parameter"));
         }
 
-        const typ = if (self.match(.colon)) try self.parseType() else null;
+        const typ = if (self.match(.colon) and !self.check(.equal)) try self.parseType() else null;
 
         const value = if (self.match(.equal)) b: {
             named_started = true;
@@ -450,7 +490,12 @@ fn fnParams(self: *Self, is_closure: bool) Error![]Ast.VarDecl {
         }
 
         for (param_names.items) |p| {
-            params.append(self.allocator, .{ .name = p, .typ = typ, .value = value }) catch oom();
+            params.append(self.allocator, .{
+                .name = p,
+                .typ = typ,
+                .value = value,
+                .is_const = true,
+            }) catch oom();
         }
 
         self.skipNewLines();
@@ -496,7 +541,7 @@ fn structDecl(self: *Self, is_extern: bool) !Node {
             if (self.match(.comma)) continue;
         }
 
-        const typ = if (self.match(.colon)) try self.parseType() else null;
+        const typ = if (self.match(.colon) and !self.check(.equal)) try self.parseType() else null;
         const value = if (self.match(.equal)) try self.parsePrecedenceExpr(0) else null;
 
         if (typ == null and value == null) {
@@ -504,7 +549,12 @@ fn structDecl(self: *Self, is_extern: bool) !Node {
         }
 
         for (field_names.items) |field_name| {
-            fields.append(self.allocator, .{ .name = field_name, .typ = typ, .value = value }) catch oom();
+            fields.append(self.allocator, .{
+                .name = field_name,
+                .typ = typ,
+                .value = value,
+                .is_const = true,
+            }) catch oom();
         }
 
         self.skipNewLines();
@@ -632,39 +682,21 @@ fn unionDecl(self: *Self, is_err: bool) Error!Node {
 fn unionTag(self: *Self) Error!Ast.UnionDecl.Tag {
     try self.expect(.identifier, .non_ident_tag_name);
     const name = self.token_idx - 1;
-    self.skipNewLines();
-
-    const payload = if (self.check(.comma) or self.check(.@"fn") or self.check(.right_brace) or self.check(.impl))
-        null
-    else payload: {
-        try self.expect(.colon, .expect_colon_before_type);
-        const ty = try self.parseType();
-        self.skipNewLines();
-        break :payload ty;
-    };
+    const payload = if (self.match(.colon)) try self.parseType() else null;
 
     return .{ .name = name, .payload = payload };
 }
 
 fn varDecl(self: *Self) Error!Node {
-    const is_const = self.prev(.tag) == .let;
     const name = self.token_idx;
-    try self.expect(.identifier, .expectName("variable"));
+    self.advance();
 
     if (self.check(.comma)) {
-        return self.multiVarDecl(name, is_const);
+        return self.multiVarDecl(name);
     }
 
     const typ = try self.expectTypeOrEmpty();
-
-    const value = if (self.match(.equal))
-        try self.parsePrecedenceExpr(0)
-    else
-        null;
-
-    if (typ == null and value == null) {
-        return self.errAt(name, .expect_type_or_value_in_decl);
-    }
+    const is_const, const value = try self.parseDeclEnd();
 
     return .{ .var_decl = .{
         .name = name,
@@ -674,8 +706,7 @@ fn varDecl(self: *Self) Error!Node {
     } };
 }
 
-fn multiVarDecl(self: *Self, first_name: usize, is_const: bool) Error!Node {
-    var count: usize = 1;
+fn multiVarDecl(self: *Self, first_name: usize) Error!Node {
     var decls: ArrayList(Ast.VarDecl) = .empty;
     var variables: ArrayList(usize) = .empty;
 
@@ -685,15 +716,14 @@ fn multiVarDecl(self: *Self, first_name: usize, is_const: bool) Error!Node {
     }
 
     decls.ensureTotalCapacity(self.allocator, variables.items.len) catch oom();
+
     const typ = try self.expectTypeOrEmpty();
-    const first_value = if (self.match(.equal))
-        try self.parsePrecedenceExpr(0)
-    else
-        null;
+    const is_const, const first_value = try self.parseDeclEnd();
 
     // First declaration
     decls.appendAssumeCapacity(.{ .name = first_name, .typ = typ, .value = first_value, .is_const = is_const });
 
+    var count: usize = 1;
     // If only one value
     if (!self.check(.comma)) {
         for (variables.items) |var_idx| {
@@ -713,22 +743,33 @@ fn multiVarDecl(self: *Self, first_name: usize, is_const: bool) Error!Node {
         });
     }
 
-    if (count > 1 and count != variables.items.len + 1)
+    if (count > 1 and count != variables.items.len + 1) {
         return self.errAt(variables.items[count - 1], .{ .wrong_value_count_var_decl = .{
             .expect = variables.items.len + 1,
         } });
+    }
 
     return .{ .multi_var_decl = .{ .decls = decls.toOwnedSlice(self.allocator) catch oom() } };
 }
 
-/// Expects a type after ':'. If no colon, declares an empty type
+fn parseDeclEnd(self: *Self) Error!struct { bool, ?*Expr } {
+    if (self.match(.equal)) {
+        return .{ false, try self.parsePrecedenceExpr(0) };
+    }
+    if (self.match(.colon)) {
+        return .{ true, try self.parsePrecedenceExpr(0) };
+    }
+    return .{ false, null };
+}
+
 fn expectTypeOrEmpty(self: *Self) Error!?*Ast.Type {
-    return if (self.match(.colon))
-        try self.parseType()
-    else if (self.check(.identifier))
-        self.errAtCurrent(.expect_colon_before_type)
-    else
-        null;
+    // Called in variable declaration context, knows that there is a ':'
+    self.advance();
+
+    // 'name := value' or 'name :: value'
+    if (self.check(.equal) or self.check(.colon)) return null;
+
+    return try self.parseType();
 }
 
 /// Parses a type. It assumes you know that a type is expected at this place
@@ -917,8 +958,6 @@ fn getAlias(self: *Self, token: Token.Tag) Error!?TokenIndex {
 }
 
 fn statement(self: *Self) Error!Node {
-    self.ctx.label = self.openningLabel();
-
     return if (self.match(.@"continue"))
         self.continueStmt()
     else if (self.match(.@"defer"))
@@ -928,6 +967,8 @@ fn statement(self: *Self) Error!Node {
 }
 
 fn deferableStmt(self: *Self) Error!Node {
+    self.ctx.label = self.openningLabel();
+
     return if (self.match(.@"for"))
         self.forLoop()
     else if (self.match(.@"while"))
@@ -1056,7 +1097,7 @@ fn whileStmt(self: *Self) Error!Node {
         break :cond try self.pattern();
     };
 
-    const body = if (self.isAtBlock())
+    const body = if (self.match(.left_brace))
         try self.blockExpr(label)
     else
         return self.errAtCurrent(.expectBraceAfter("while's condition"));
@@ -1069,41 +1110,29 @@ fn whileStmt(self: *Self) Error!Node {
 
 fn pattern(self: *Self) Error!Ast.Pattern {
     // Any structural pattern like:
-    //  if let [x, y] = value {}
-    //  if let Point{x, ..} = value {}
-    //  if let nonNull = nullableValue {}
-    if (self.match(.let) or self.match(.@"var")) {
-        const decl_token = self.token_idx - 1;
-
-        if (self.match(.identifier)) {
-            return self.structPattern(decl_token, self.token_idx - 1);
-        } else {
-            @panic("TODO");
+    //  if [x, y] := value {}
+    //  if Point{x, ..} := value {}
+    //  if nonNull := nullableValue {}
+    if (self.check(.identifier)) {
+        if (self.checkRelative(.colon, 1) and self.checkRelative(.equal, 2)) {
+            self.token_idx += 3;
+            return self.nullablePattern(self.token_idx - 3);
         }
     }
+
     // Basic pattern meaning just an expression and maybe an alias
-    else {
-        const expr = try self.parsePrecedenceExpr(0);
-        const alias = try self.getAlias(.at);
-        return .{ .value = .{ .expr = expr, .alias = alias } };
-    }
+    const expr = try self.parsePrecedenceExpr(0);
+    const alias = try self.getAlias(.at);
+    return .{ .value = .{ .expr = expr, .alias = alias } };
 }
 
-fn structPattern(self: *Self, decl_token: TokenIndex, structure: TokenIndex) Error!Ast.Pattern {
-    if (self.match(.equal)) {
-        return self.nullablePattern(decl_token, structure);
-    }
-
-    // TODO: Error
-    @panic("TODO");
-}
-
-fn nullablePattern(self: *Self, decl_token: TokenIndex, binding: TokenIndex) Error!Ast.Pattern {
-    return .{ .nullable = .{
-        .token = decl_token,
-        .binding = binding,
-        .expr = try self.parsePrecedenceExpr(0),
-    } };
+fn nullablePattern(self: *Self, binding: TokenIndex) Error!Ast.Pattern {
+    return .{
+        .nullable = .{
+            .binding = binding,
+            .expr = try self.parsePrecedenceExpr(0),
+        },
+    };
 }
 
 const Assoc = enum { left, none };
@@ -1191,12 +1220,6 @@ fn parsePrecedenceExpr(self: *Self, prec_min: i8) Error!*Expr {
 
 /// Parses expressions (prefix + sufix)
 fn parseExpr(self: *Self) Error!*Expr {
-    if (self.ctx.label) |label| {
-        if (self.prev(.tag) != .left_brace and self.prev(.tag) != .@"if") {
-            return self.errAt(label, .invalid_label);
-        }
-    }
-
     const expr = try switch (self.prev(.tag)) {
         .@"break" => self.breakExpr(),
         .dot => self.implicitSelector(),
@@ -1251,12 +1274,6 @@ fn array(self: *Self) Error!*Expr {
     return expr;
 }
 
-/// Checks wethre we are at a left brace or a colon for labelled and unlabelled blocks
-/// It advances token_idx if matched
-fn isAtBlock(self: *Self) bool {
-    return self.match(.left_brace) or self.match(.colon);
-}
-
 /// Parses either a labelled or not block
 fn blockExpr(self: *Self, label: ?TokenIndex) Error!*Expr {
     var body, _ = try self.block();
@@ -1292,6 +1309,9 @@ fn block(self: *Self) Error!struct { *Expr, bool } {
         }
 
         exprs.append(self.allocator, node) catch oom();
+        if (self.prev(.tag) != .new_line and !self.check(.new_line) and !self.check(.right_brace)) {
+            return self.errAtPrev(.expect_new_line);
+        }
         self.skipNewLines();
     }
 
@@ -1325,13 +1345,10 @@ fn breakExpr(self: *Self) Error!*Expr {
 /// Parses an openning label `label:` if possible and advances if so, otherwise returns `null`
 fn openningLabel(self: *Self) ?TokenIndex {
     if (!self.check(.identifier)) return null;
-    if (self.token_idx > self.token_tags.len - 2) return null;
-
-    self.token_idx += 1;
-    if (!self.match(.colon)) {
-        self.token_idx -= 1;
-        return null;
-    }
+    if (self.token_idx + 2 >= self.token_tags.len) return null;
+    if (!self.checkRelative(.colon, 1)) return null;
+    if (!isLabelTarget(self.getTag(self.token_idx + 2))) return null;
+    self.token_idx += 2;
 
     return self.token_idx - 2;
 }
@@ -1389,14 +1406,13 @@ fn ifExpr(self: *Self) Error!*Expr {
     const pat = pat: {
         const save_cond = self.ctx.setAndGetPrevious(.in_cond, true);
         defer self.ctx.in_cond = save_cond;
-
         break :pat try self.pattern();
     };
 
     self.skipNewLines();
 
     // TODO: Warning for unnecessary 'do' if there is a block after
-    const then: Node = if (self.isAtBlock())
+    const then: Node = if (self.match(.left_brace))
         .{ .expr = try self.blockExpr(label) }
     else if (self.matchAndSkip(.do))
         try self.statement()
@@ -1689,7 +1705,7 @@ fn finishCall(self: *Self, expr: *Expr) Error!*Expr {
         }
 
         const param_name, const param_expr = b: {
-            if (self.check(.identifier) and self.token_tags[self.token_idx + 1] == .colon) {
+            if (self.check(.identifier) and self.token_tags[self.token_idx + 1] == .equal) {
                 named_started = true;
                 self.token_idx += 2;
                 break :b .{ self.token_idx - 2, try self.parsePrecedenceExpr(0) };
@@ -1755,14 +1771,14 @@ fn structLiteral(self: *Self, expr: Ast.StructLiteral.Kind) Error!*Expr {
         const ident = self.token_idx - 1;
         self.skipNewLines();
 
-        if (!self.check(.colon) and !self.check(.comma) and !self.check(.right_brace)) {
-            return self.errAt(ident, .expect_colon_struct_lit);
+        if (!self.check(.equal) and !self.check(.comma) and !self.check(.right_brace)) {
+            return self.errAt(ident, .expect_equal_struct_lit);
         }
 
         // Either: { x: 3 }  or { x }
         fields_values.append(self.allocator, .{
             .name = self.token_idx - 1,
-            .value = if (self.match(.colon)) try self.parsePrecedenceExpr(0) else null,
+            .value = if (self.match(.equal)) try self.parsePrecedenceExpr(0) else null,
         }) catch oom();
 
         self.skipNewLines();

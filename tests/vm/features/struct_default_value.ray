@@ -5,9 +5,9 @@ struct Vec2 {
     a, b: float,
     x: int = 8,
     y: bool,
-    z, w = "yup",
-    aa, bb = false,
-    foo: Foo = .{ a: 8 },
+    z, w := "yup",
+    aa, bb := false,
+    foo: Foo = .{ a=8 },
     bar: Bar = .bb,
     arr: []bool = [true, false],
 
@@ -28,10 +28,10 @@ struct Vec2 {
 
 
 fn main() {
-    var v = Vec2 { a: 1.2, b: 2.4, y: true }
+    v := Vec2 { a=1.2, b=2.4, y=true }
     v.display()
 
 
-    v = Vec2 { y: false, x: 7, a: 3.3, w: "Tom",  b: 99.99 }
+    v = Vec2 { y=false, x=7, a=3.3, w="Tom",  b=99.99 }
     v.display()
 }

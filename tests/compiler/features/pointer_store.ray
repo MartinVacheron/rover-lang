@@ -1,6 +1,6 @@
 fn main() {
-    let a = 1
-    let ptr = *a
+    a := 1
+    ptr := *a
     ptr.* = 6
 }
 

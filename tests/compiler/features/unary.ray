@@ -1,8 +1,8 @@
 fn main() {
-    let i = 1
-    let f = 65.82
-    let b = true
-    let ib = 0xffff
+    i := 1
+    f := 65.82
+    b := true
+    ib := 0xffff
 
     _ = -i
     _ = ----i

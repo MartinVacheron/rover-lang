@@ -28,7 +28,7 @@ fn markerStuff2(m = Marker.cross) {
 }
 
 fn main() {
-    var cell = Cell{}
+    cell := Cell{}
     print cell.marker
     print cell.marker.toString()
     print cell.marker2

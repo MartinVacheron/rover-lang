@@ -1,20 +1,20 @@
 fn main() {
-    let a: int = match "Tom" {
+    a: int = match "Tom" {
         "Tom" => 4.5
         else => 1
     }
 
-    let b: int = match "Tom" {
+    b: int = match "Tom" {
         "Tom" => 5
         else => print "yes"
     }
 
-    let u: int|float = 1
+    u: int|float = 1
     match u {
 
     }
 
-    let b: int|float = match 3 {
+    b: int|float = match 3 {
         1 => true
         else => 2.5
     }
@@ -24,7 +24,7 @@ fn main() {
         else => 2.5
     }
 
-     let t = match 1 {
+     t := match 1 {
         1 => print "oui"
         else => print "non"
     }

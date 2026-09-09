@@ -7,8 +7,8 @@ enum Marker {
 enum Bar{a}
 
 fn main() {
-    var marker: Marker = .cross
-    var bar: Bar = .a
+    marker: Marker = .cross
+    bar: Bar = .a
 
     match marker {
         Marker.circle => print "circle"
@@ -24,19 +24,19 @@ fn main() {
     }
 
     marker = .none
-    var foo = match marker {
+    foo := match marker {
         .circle => 1
         .cross => 2
         .none => {
-            var tmp = 4
-            var tmp2 = 6
+            tmp := 4
+            tmp2 := 6
             break 3
         }
     }
 
     print foo
 
-    let a = match marker {
+    a := match marker {
         .circle => "circle"
         else => "any other"
     }

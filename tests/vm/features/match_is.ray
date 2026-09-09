@@ -3,20 +3,20 @@ fn getValue() -> int|float {
 }
 
 fn main() {
-    var a: int|float = 8.3
+    a: int|float = 8.3
 
     match a is {
         int => print a + 1
         float => print "float"
     }
 
-    let b = match a is {
+    b := match a is {
         int => 1
         else => 5
     }
     print b
 
-    let trash = true
+    trash := true
     match a is {
         float {
             1.2 => print "first"

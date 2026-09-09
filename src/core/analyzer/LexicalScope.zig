@@ -280,7 +280,7 @@ pub fn declareVarInFutureScope(
         .initialized = true,
         .index = index,
         .captured = captured,
-        .constant = true,
+        .constant = false,
         .comp_time = false,
         .ext_mod = null,
     }) catch oom();

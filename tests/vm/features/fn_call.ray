@@ -6,9 +6,9 @@ fn glob_add(a: int, b: int) -> str {
 }
 
 fn main() {
-    var arg1 = 2
-    var arg2 = 10
-    var arg3 = 5
+    arg1 := 2
+    arg2 := 10
+    arg3 := 5
 
     // Checks that naked return doesn't mess up the stack
     naked_return(arg1)
@@ -22,8 +22,8 @@ fn main() {
     print glob_add(arg1, arg2) // expect: "above"
 
     fn add1(arg1: int, arg2: float,) -> float {
-        var tmp = 1
-        var local = arg1 + tmp
+        tmp := 1
+        local := arg1 + tmp
 
         return if glob_add(tmp, local) == "under" do arg2 else float(arg1)
     }

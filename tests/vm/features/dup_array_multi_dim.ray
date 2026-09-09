@@ -1,9 +1,9 @@
 fn main() {
-    var arr = [[1, 2, 3], [4, 5, 6]]
+    arr := [[1, 2, 3], [4, 5, 6]]
 
     // Late assign
     print "Test 1"
-    var arrRef: []int
+    arrRef: []int
     arrRef = arr[1]
 
     print arrRef // [4, 5, 6]
@@ -13,7 +13,7 @@ fn main() {
 
     // Direct assign
     print "Test 2"
-    var arrRef2 = arr[0]
+    arrRef2 := arr[0]
     print arrRef2 // [1, 2, 3] 
     arrRef2[1] = 98
     print arrRef2 // [1, 98, 3]
@@ -24,7 +24,7 @@ fn main() {
 
     // Mutates the original object late assign
     print "Test 3"
-    var arrRef3: []int
+    arrRef3: []int
     arrRef3 = arr[1]
     print arrRef3 // [4, 5, 6]
     arr[1] = [-1, -2, -3]
@@ -33,7 +33,7 @@ fn main() {
 
     // Mutates the original object direct assign
     print "Test 4"
-    var arrRef4 = arr
+    arrRef4 := arr
     print arrRef4 // [[1, 2, 666], [-1, -2, -3]] 
     arr[0] = [12, 34, 45]
     print arrRef4 // [[1, 2, 666], [-1, -2, -3]] 

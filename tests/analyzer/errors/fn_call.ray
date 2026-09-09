@@ -3,10 +3,10 @@ fn sub(arg1: float, args2: bool) {}
 
 struct Foo {
     fn staticFn(a: int) {}
-    fn method(self, a=1) {}
+    fn method(self, a := 1) {}
 }
 
-fn defaults(a: int, b=2) {}
+fn defaults(a: int, b := 2) {}
 
 fn callFoo(f: Foo) {}
 
@@ -14,16 +14,16 @@ fn main() {
     add(1)
     add(1, 2)
     sub(4.5)
-    var a = add("hoy")
+    a := add("hoy")
 
-    var foo = Foo{}
-    var bound = foo.method
+    foo := Foo{}
+    bound := foo.method
     bound()
 
     foo.staticFn(5)
     Foo.method()
 
-    defaults(a: 1, a: 2)
+    defaults(a=1, a=2)
 
     callFoo(Foo)
 }

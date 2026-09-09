@@ -17,10 +17,10 @@ struct Bar {
 }
 
 struct Baz {
-    value=6,
+    value := 6,
 
     impl Foo {
-        fn speak(self, a=2) {
+        fn speak(self, a := 2) {
             print self.value
             print "Baz " + str(a)
         }
@@ -32,11 +32,11 @@ fn f(value: Foo) {
 }
 
 fn main() {
-    let bar = Bar{value: true}
+    bar := Bar{value=true}
     bar.speak(1)
     f(bar)
 
-    let baz = Baz{}
+    baz := Baz{}
     baz.speak(8)
     f(baz)
 }

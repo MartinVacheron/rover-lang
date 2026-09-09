@@ -1,22 +1,22 @@
 fn main() {
     // Near scope capture
-    var a: int = 3
+    a: int = 3
     fn capture() { a += 5 }
 
     // Far scope capture
-    var first = 1
-    var c: int = 3
-    var b = true
-    var last = 9
+    first := 1
+    c: int = 3
+    b := true
+    last := 9
 
     capture()
     print a
 
     fn nested() {
-        var mach: int
+        mach: int
 
         fn nested2() {
-            var mach3: int
+            mach3: int
             fn capture1() {
                 print b
                 print c
@@ -26,12 +26,12 @@ fn main() {
         }
 
         // Capture another one
-        var mach2 = c
+        mach2 := c
         nested2()
     }
 
     // Assignment
-    var d = 1
+    d := 1
     fn capture2() { print d }
     d = 2
     capture2()

@@ -72,7 +72,7 @@
                                 "value": {
                                     "int": "1"
                                 },
-                                "const": "true"
+                                "const": "false"
                             },
                             "var_decl": {
                                 "name": "b",
@@ -80,7 +80,7 @@
                                 "value": {
                                     "int": "2"
                                 },
-                                "const": "true"
+                                "const": "false"
                             },
                             "assignment": {
                                 "assigne": {

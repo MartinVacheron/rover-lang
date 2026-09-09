@@ -1,5 +1,5 @@
 fn main() {
-    let bind: int|str = 5
+    bind: int|str = 5
     match bind @b is {
         else => print "useless"
     }

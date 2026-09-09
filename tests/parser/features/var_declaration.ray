@@ -1,3 +1,3 @@
-var home: House
-var home = 12 + 4.
-var home: House = 12 + 4.
+home: House
+home := 12 + 4.
+home: House = 12 + 4.

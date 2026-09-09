@@ -24,13 +24,13 @@ struct Human {
 }
 
 fn main() {
-    var pet = Pet{name: "Vodka", life: 9.5}
-    var tom = Human{age: 5, name: "Tom", pet}
-    var trash: int
+    pet := Pet{name="Vodka", life=9.5}
+    tom := Human{age=5, name="Tom", pet}
+    trash: int
 
     tom.speak() 
     print tom.getOld(60)
-    var trash2: int
+    trash2: int
     tom.pet.speakTo(tom.name)
 }
 

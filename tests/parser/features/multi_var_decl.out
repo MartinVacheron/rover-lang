@@ -1,23 +1,6 @@
 {
     "multi_var_decl": [
         "var_decl": {
-            "name": "a",
-            "type": {},
-            "value": {},
-        },
-        "var_decl": {
-            "name": "b",
-            "type": {},
-            "value": {},
-        },
-        "var_decl": {
-            "name": "c",
-            "type": {},
-            "value": {}
-        },
-    ],
-    "multi_var_decl": [
-        "var_decl": {
             "name": "d",
             "type": {},
             "value": {

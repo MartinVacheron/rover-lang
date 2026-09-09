@@ -1,17 +1,17 @@
 fn main() {
     // Only one path produces a value
-    var a = if false { return } else 4
+    a := if false { return } else 4
     print a // expect: 4
 
-    var b = if true do 5 else return
+    b := if true do 5 else return
     print b // expect: 5
 
     fn func(a: int) -> int {
         // Only one path generates a value, returns a value otherwise
         print if true do "str" else return a // expect: "str"
 
-        var tmp: str = if false do return a + 2 else {
-            var local = 56.4
+        tmp: str = if false do return a + 2 else {
+            local := 56.4
             break "champ"
         }
 

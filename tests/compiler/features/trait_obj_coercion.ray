@@ -22,17 +22,17 @@ fn f(value: Foo) {
 }
 
 fn gen() -> Foo {
-    return Bar{value: false}
+    return Bar{value=false}
 }
 
 fn main() {
     gen().speak(5)
 
-    let bar: Foo = Bar{value: true}
+    bar: Foo = Bar{value=true}
     bar.speak(3)
 
-    var baz = Baz{field: gen()}
+    baz := Baz{field=gen()}
     baz.field.speak(56)
-    baz = Baz{field: Bar{value: false}}
+    baz = Baz{field=Bar{value=false}}
 }
 

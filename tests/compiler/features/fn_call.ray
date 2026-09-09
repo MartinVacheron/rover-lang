@@ -12,8 +12,8 @@ fn add4() {
 
 // Body and args
 fn add5(arg1: int, arg2: float,) -> float {
-    var tmp = 1
-    var local = arg1 + tmp
+    tmp := 1
+    local := arg1 + tmp
     return arg2
 }
 

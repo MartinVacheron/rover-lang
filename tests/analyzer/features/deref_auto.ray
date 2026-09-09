@@ -11,12 +11,12 @@ struct Foo {
 }
 
 fn main() {
-    let baz = Baz{ a: "ok" }
-    let bar = Bar{ a: 5, b: *baz }
-    let pbar = *bar
+    baz := Baz{ a="ok" }
+    bar := Bar{ a=5, b=*baz }
+    pbar := *bar
 
-    let foo = Foo{ a: *bar }
-    let pfoo = *foo
+    foo := Foo{ a=*bar }
+    pfoo := *foo
     print pfoo.a.a
     print pfoo.a.b.a
 }

@@ -21,9 +21,9 @@ fn copy() -> int {
 }
 
 fn main() {
-    var foo = Foo{}
+    foo := Foo{}
 
-    var bound = Foo.static
+    bound := Foo.static
     print bound()
 
     bound = copy
@@ -36,17 +36,17 @@ fn main() {
     print bound()
 
     // Call conv survives a layer
-    var tmp = foo.importFuncFromMethod
+    tmp := foo.importFuncFromMethod
     print tmp()
     bound = tmp()
     print bound()
 
     // Builtins
-    let bind = int
+    bind := int
     print bind(5.6)
     print bind(-92.123)
 
-    let bind2 = float
+    bind2 := float
     print bind2(1)
     print bind2(10)
 }

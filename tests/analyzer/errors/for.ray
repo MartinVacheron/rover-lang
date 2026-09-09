@@ -1,11 +1,11 @@
 struct Foo {}
 fn main() {
     for v in 5 {}
-    let foo = Foo{}
+    foo := Foo{}
     for v in foo {}
 
     for s in 1.2..5.6 {}
 
-    let string = "abc"
+    string := "abc"
     for c in *string {}
 }

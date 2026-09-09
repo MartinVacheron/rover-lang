@@ -23,11 +23,11 @@ fn f(value: Foo) {
 }
 
 fn main() {
-    let bar = Bar{}
+    bar := Bar{}
     bar.speak()
     f(bar)
 
-    let baz = Baz{}
+    baz := Baz{}
     baz.speak()
     f(baz)
 }

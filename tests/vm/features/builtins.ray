@@ -9,7 +9,7 @@ fn main() {
     print int("67")
     print int(Foo.b)
 
-    var b: float = float(6)
+    b: float = float(6)
     print b
     b = float(8.4)
     print b

@@ -1,18 +1,18 @@
 fn main() {
     // First error, retuns an int
-    var a = if true { return 1 } else 4
+    a := if true { return 1 } else 4
     // Second, same with str and no block
-    var b = if false do 5 else return "oui"
+    b := if false do 5 else return "oui"
 
     // If without else in non-partial context
-    var c = if true do 6
+    c := if true do 6
 
     fn func(a: int, b: float) -> int {
         // Returns b, which is a float
         print if true do "str" else return b
 
-        var tmp: str = if true do return a + 2 else {
-            var local = 56.4
+        tmp: str = if true do return a + 2 else {
+            local := 56.4
             if false do break "champ"
         }
 
